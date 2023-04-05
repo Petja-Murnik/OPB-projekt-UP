@@ -6,4 +6,6 @@ Naredili bomo aplikacijo za spletno trgovino Petika, ki bo različnim uporabniko
 [comment]: <> ![OPB_ER_diagram_projekt.pdf](https://github.com/Petja-Murnik/OPB-projekt-UP/files/11148026/OPB_ER_diagram_projekt.pdf)
 
 
- ![OPB_ER_diagram_projekt.pdf](~/OPB_ER_diagram_projekt.pdf)
+ 
+
+ <image src="OPB_ER_diagram_projekt.pdf"/>
