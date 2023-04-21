@@ -26,9 +26,19 @@ def static(filename):
     return static_file(filename, root='static')
 
 
-@get('/')
+@get("/")
 def index():
     return template('zacetna.html', osebe=cur)
+
+
+
+
+###################
+#proba za zaposlene 
+@get("/zaposleni/")
+def zaposleni_get():
+    #cur.execute("SELECT * FROM zaposleni")
+    return template("zaposleni.html",  osebe=cur)
 
 
 
@@ -38,7 +48,7 @@ def index():
 
 # priklopimo se na bazo
 conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=DB_PORT)
-#conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
+conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 # poženemo strežnik na podanih vratih, npr. http://localhost:8080/
