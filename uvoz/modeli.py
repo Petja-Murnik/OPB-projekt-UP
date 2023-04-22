@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+""" from dataclasses import dataclass, field
 
 @dataclass
 class Zaposleni:
@@ -27,7 +27,7 @@ class Kupci:
     naslov: str = field(default="")
     mesto: str = field(default="")
     drzava : str = field(default="")
-    TRR: str = field(default="")
+    TRR: str = field(default="") """
 
 
 

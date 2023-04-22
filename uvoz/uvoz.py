@@ -1,4 +1,4 @@
-import auth as auth
+import auth_public  as auth
 
 # uvozimo psycopg2
 import psycopg2, psycopg2.extensions, psycopg2.extras
@@ -11,6 +11,9 @@ import pandas as pd
 conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password)
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor) 
 
+
+
+######### Zaposleni 
 
 def ustvari_tabelo_zaposlenih():
     cur.execute("""
@@ -37,19 +40,25 @@ def pobrisi_tabelo_zaposlenih():
 
 
 def uvozi_podatke_zaposlenih():
-    with open("podatki/Zaposleni.csv" , encoding  = "utf8" ,errors = "ignore") as f :
-        rd = csv.reader(f)
+    with open("podatki/Zaposleni.csv" , encoding  = "utf8" ,errors = "ignore") as m :
+        rd = csv.reader(m)
         next(rd)
         for r in rd : 
             cur.execute("""
             INSERT INTO zaposleni
             (ime_priimek , naslov, mesto , TRR , placa, stevilo_ur)
             VALUES
-            (%s, %s , %s , %s , %f,%f)
+            (%s, %s , %s , %s , %s,%s)
             """ , r)
     conn.commit()
 
-ustvari_tabelo_zaposlenih()
-uvozi_podatke_zaposlenih()
+
+#pobrisi_tabelo_zaposlenih()
+#ustvari_tabelo_zaposlenih()
+#uvozi_podatke_zaposlenih()
+
+
+########################
+
 
 

@@ -5,7 +5,7 @@
 from bottleext import get, post, run, request, template, redirect, static_file, url
 
 # uvozimo ustrezne podatke za povezavo
-import auth_public as auth
+import uvoz.auth_public as auth
 
 # uvozimo psycopg2
 import psycopg2, psycopg2.extensions, psycopg2.extras
