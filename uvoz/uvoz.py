@@ -11,9 +11,7 @@ import pandas as pd
 conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password)
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor) 
 
-
-
-######### Zaposleni 
+################################### Zaposleni 
 
 def ustvari_tabelo_zaposlenih():
     cur.execute("""
@@ -28,16 +26,11 @@ def ustvari_tabelo_zaposlenih():
     """)
     conn.commit()
 
-
-
-
 def pobrisi_tabelo_zaposlenih():
     cur.execute("""
     DROP TABLE zaposleni;
     """)
     conn.commit()  
-
-
 
 def uvozi_podatke_zaposlenih():
     with open("podatki/Zaposleni.csv" , encoding  = "utf8" ,errors = "ignore") as m :
@@ -52,13 +45,54 @@ def uvozi_podatke_zaposlenih():
             """ , r)
     conn.commit()
 
-
 #pobrisi_tabelo_zaposlenih()
 #ustvari_tabelo_zaposlenih()
 #uvozi_podatke_zaposlenih()
 
+#####################################
 
-########################
+def ustvari_tabelo_kupcev():
+    cur.execute("""
+        CREATE TABLE kupci(
+        ime_priimek TEXT NOT NULL, 
+        naslov TEXT NOT NULL,
+        mesto TEXT NOT NULL,
+        drzava TEXT NOT NULL,
+        TRR TEXT PRIMARY KEY 
+        ) ;
+    """)
+    conn.commit()
+
+def pobrisi_tabelo_kupcev():
+    cur.execute("""
+    DROP TABLE kupci ;
+    """)
+
+def uvozi_podatke_kupcev():
+    with open("podatki/kupci.csv" , encoding  = "utf8" ,errors = "ignore") as m :
+        rd = csv.reader(m)
+        next(rd)
+        for r in rd :
+            cur.execute("""
+            INSERT INTO kupci 
+            (ime_priimek , naslov, mesto , drzava , TRR)
+            VALUES
+            (%s ,%s ,%s ,%s, %s)
+            """, r)
+    conn.commit()
+
+#pobrisi_tabelo_kupcev()
+#ustvari_tabelo_kupcev() 
+#uvozi_podatke_kupcev()
+    
+################ Tabele (povezovalne)
+##Povezovalna tabela med [zaposleni(ključ TRR); vloga ;oddelek] 
 
 
+def pomoc():
+    df = pd.read_excel("podatki/Tabele.xlsx" ,sheet_name="Sheet2",skiprows=[0])
+    print(df)
 
+pomoc()    
+
+#pip install openpyxl
