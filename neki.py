@@ -12,6 +12,7 @@ import psycopg2, psycopg2.extensions, psycopg2.extras
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE) # se znebimo problemov s šumniki
 
 import os
+import hashlib
 
 # privzete nastavitve
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
@@ -55,3 +56,58 @@ cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 if __name__ == "__main__":
     run(host='localhost', port=SERVER_PORT, reloader=RELOADER)
 
+#OSNUTEK KODE ZA PRIJAVO IN REGISTRACIJO
+def hashGesla(s):
+    m = hashlib.sha256()
+    m.update(s.encode("utf-8"))
+    return m.hexdigest()
+
+
+@get('/registracija/')
+def registracija_get():
+    napaka = None
+    return template('registracija.html', napaka=napaka)
+
+@post('/registracija/')
+def registracija_post():
+    ime_priimek = request.forms.ime_priimek
+    naslov = request.forms.naslov
+    mesto = request.forms.mesto
+    drzava = request.forms.mesto
+    TRR = request.forms.TRR
+    email = request.forms.email
+    uporabnisko_ime = request.forms.uporabnisko_ime
+    geslo = request.forms.geslo
+    geslo2 = request.forms.geslo2
+
+@post('/prijava/')
+def prijava_post():
+    uporabnisko_ime = request.forms.uporabnisko_ime
+    geslo = request.forms.geslo
+    if uporabnisko_ime is None or geslo is None:
+        redirect(url('prijava_get'))
+        return
+    oseba = cur   
+    hashBaza = None
+    try: 
+        hashBaza = cur.execute("SELECT geslo FROM oseba WHERE uporabnisko_ime = %s", (uporabnisko_ime, ))
+        hashBaza = cur.fetchone()
+        hashBaza = hashBaza[0]
+    except:
+        hashBaza = None
+    if hashBaza is None:
+        return template('prijava.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if hashGesla(geslo) != hashBaza:
+        return template('prijava.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    response.set_cookie('uporabnisko_ime', uporabnisko_ime, secret=skrivnost)
+    redirect(url('zacetna'))
+
+
+#odjava
+#@get('/odjava/')
+#def odjava_get():
+#    response.delete_cookie('uporabnisko_ime')
+#    redirect(url('index'))
+
+
+#KODE ZA KOŠARICO, SEZNAM KUPLJENIH STVARI...
