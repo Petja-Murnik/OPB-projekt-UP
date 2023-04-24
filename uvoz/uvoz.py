@@ -48,10 +48,9 @@ def uvozi_podatke_zaposlenih():
             """ , r)
     conn.commit()
 
-
-pobrisi_tabelo_zaposlenih()
-ustvari_tabelo_zaposlenih()
-uvozi_podatke_zaposlenih()
+#pobrisi_tabelo_zaposlenih()
+#ustvari_tabelo_zaposlenih()
+#uvozi_podatke_zaposlenih()
 
 #####################################KUPCI
 
@@ -88,12 +87,64 @@ def uvozi_podatke_kupcev():
             """, r)
     conn.commit()
 
-pobrisi_tabelo_kupcev()
-ustvari_tabelo_kupcev() 
-uvozi_podatke_kupcev()
-    
+#pobrisi_tabelo_kupcev()
+#ustvari_tabelo_kupcev() 
+#uvozi_podatke_kupcev()
+
+################################### Oddelki
+
+def ustvari_tabelo_oddelkov():
+    cur.execute("""
+    CREATE TABLE oddelki(
+    id_oddelek TEXT PRIMARY KEY,
+    TRR TEXT NOT NULL,
+    stanje NUMERIC NOT NULL,
+    ime TEXT NOT NULL
+    );
+    """)
+    conn.commit()
+
+def pobrisi_tabelo_oddelkov():
+    cur.execute("""
+    DROP TABLE oddelki;
+    """)
+    conn.commit()
+
+def uvozi_podatke_oddelkov():
+    df = pd.read_excel("podatki/Tabele.xlsx" ,sheet_name="Sheet3", skiprows=[0],  header=None)
+    for row in df.itertuples():
+        vrstica = list(row)[1:]
+        cur.execute("""
+            INSERT INTO oddelki(
+            id_oddelek , TRR, stanje , ime)
+            VALUES
+            (%s, %s, %s, %s);
+        """, vrstica)
+    conn.commit()    
+
+#pobrisi_tabelo_oddelkov()
+#ustvari_tabelo_oddelkov()
+#uvozi_podatke_oddelkov()
+
+################################PRODUKTI
+
+
+
+
+
+
+
+
+
 ################ Tabele (povezovalne)
 ##Povezovalna tabela med [zaposleni(ključ TRR); vloga ;oddelek] 
+
+#def ustvari_tabelo_vlog_zaposlenih():
+#    cur.execute("""
+#    CREATE TABLE 
+#    """
+#    )
+
 def pomoc_dodaj_zaposleni():
     r = ["petja","murnik", "nkei","jsc","123","tsive0","asla",12,12]
     cur.execute("""
@@ -108,8 +159,9 @@ def pomoc_dodaj_zaposleni():
 
 def pomoc():
     df = pd.read_excel("podatki/Tabele.xlsx" ,sheet_name="Sheet2",skiprows=[0])
-    print(df)
+    for row in df.itertuples():
+        print(row)
 
-pomoc()    
+#pomoc()    
 
 #pip install openpyxl
