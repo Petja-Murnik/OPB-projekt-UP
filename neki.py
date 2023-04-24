@@ -70,7 +70,8 @@ def registracija_get():
 
 @post('/registracija/')
 def registracija_post():
-    ime_priimek = request.forms.ime_priimek
+    ime = request.forms.ime
+    priimek = request.forms.priimek
     naslov = request.forms.naslov
     mesto = request.forms.mesto
     drzava = request.forms.mesto
@@ -79,6 +80,11 @@ def registracija_post():
     uporabnisko_ime = request.forms.uporabnisko_ime
     geslo = request.forms.geslo
     geslo2 = request.forms.geslo2
+
+@get('/prijava/')
+def prijava_get():
+    napaka2 = None
+    return template('login.html', napaka2=napaka2)
 
 @post('/prijava/')
 def prijava_post():
