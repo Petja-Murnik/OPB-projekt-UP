@@ -96,7 +96,7 @@ def uvozi_podatke_kupcev():
 def ustvari_tabelo_oddelkov():
     cur.execute("""
     CREATE TABLE oddelki(
-    id_oddelek TEXT PRIMARY KEY,
+    id_oddelek INTEGER PRIMARY KEY,
     TRR TEXT NOT NULL,
     stanje NUMERIC NOT NULL,
     ime TEXT NOT NULL
@@ -122,14 +122,43 @@ def uvozi_podatke_oddelkov():
         """, vrstica)
     conn.commit()    
 
-#pobrisi_tabelo_oddelkov()
-#ustvari_tabelo_oddelkov()
-#uvozi_podatke_oddelkov()
+pobrisi_tabelo_oddelkov()
+ustvari_tabelo_oddelkov()
+uvozi_podatke_oddelkov()
 
 ################################PRODUKTI
 
+def ustvari_tabelo_produktov():
+    cur.execute("""
+    CREATE TABLE produkti(
+    id_produkt INTEGER PRIMARY KEY,
+    prodajna_cena NUMERIC NOT NULL,
+    nabavna_cena NUMERIC NOT NULL,
+    ime_produkt TEXT NOT NULL
+    );
+    """)
+    conn.commit()
 
+def pobrisi_tabelo_produktov():
+    cur.execute("""
+    DROP TABLE produkti ;
+    """)
+    conn.commit()
 
+def uvozi_podatke_produktov():    
+    df = pd.read_excel("podatki/Tabele.xlsx" ,sheet_name="Sheet5", skiprows=[0],  header=None)
+    for row in df.itertuples():
+        vrstica = list(row)[1:]
+        cur.execute("""
+            INSERT INTO produkti(
+            id_produkt , prodajna_cena, nabavna_cena , ime_produkt)
+            VALUES
+            (%s, %s, %s, %s);
+        """, vrstica)
+    conn.commit()    
+
+ustvari_tabelo_produktov()
+uvozi_podatke_produktov()
 
 
 
