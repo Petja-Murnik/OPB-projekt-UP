@@ -1,0 +1,19 @@
+%rebase('Form osnova.html', naslov='Registracija')
+
+<body class="text-center">
+<form class="form-signin" method="post">
+  <h1 class="h3 mb-3 font-weight-normal">Registracija</h1>
+  <label for="inputUsername" class="sr-only">Uporabniško ime</label>
+  <input type="username" id="inputUsername" class="form-control" placeholder="Uporabniško ime" name="username" required autofocus>
+  <label for="inputPassword" class="sr-only">Geslo</label>
+  <input type="password" id="inputPassword1" class="form-control" placeholder="Geslo" name="password1" required>
+  
+  %if napaka:
+  <div class="alert alert-warning">{{napaka}}</div>
+%end
+<button class="btn btn-lg btn-primary btn-block" type="submit">Prijava</button>
+<a class="btn btn-lg btn-primary btn-block" href="/Register">Registracija</a>
+
+
+</form>
+</body>

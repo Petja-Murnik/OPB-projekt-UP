@@ -66,7 +66,7 @@ def hashGesla(s):
 @get('/registracija/')
 def registracija_get():
     napaka = None
-    return template('registracija.html', napaka=napaka)
+    return template('register.html', napaka=napaka)
 
 @post('/registracija/')
 def registracija_post():
@@ -96,9 +96,9 @@ def prijava_post():
     except:
         hashBaza = None
     if hashBaza is None:
-        return template('prijava.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if hashGesla(geslo) != hashBaza:
-        return template('prijava.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     response.set_cookie('uporabnisko_ime', uporabnisko_ime, secret=skrivnost)
     redirect(url('zacetna'))
 
