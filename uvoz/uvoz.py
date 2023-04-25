@@ -122,9 +122,9 @@ def uvozi_podatke_oddelkov():
         """, vrstica)
     conn.commit()    
 
-pobrisi_tabelo_oddelkov()
-ustvari_tabelo_oddelkov()
-uvozi_podatke_oddelkov()
+#pobrisi_tabelo_oddelkov()
+#ustvari_tabelo_oddelkov()
+#uvozi_podatke_oddelkov()
 
 ################################PRODUKTI
 
@@ -157,23 +157,78 @@ def uvozi_podatke_produktov():
         """, vrstica)
     conn.commit()    
 
-ustvari_tabelo_produktov()
-uvozi_podatke_produktov()
-
-
-
-
-
+#ustvari_tabelo_produktov()
+#uvozi_podatke_produktov()
 
 ################ Tabele (povezovalne)
 ##Povezovalna tabela med [zaposleni(ključ TRR); vloga ;oddelek] 
 
-#def ustvari_tabelo_vlog_zaposlenih():
-#    cur.execute("""
-#    CREATE TABLE 
-#    """
-#    )
+def ustvari_tabelo_vlog():
+    cur.execute("""
+    CREATE TABLE vloge(
+    TRR TEXT REFERENCES zaposleni(TRR),
+    vloga TEXT NOT NULL,
+    id_oddelek INTEGER REFERENCES oddelki(id_oddelek)
+    );
+    """)
+    conn.commit()
 
+def pobrisi_tabelo_vlog():
+    cur.execute("""
+    DROP TABLE vloge ;
+    """)
+    conn.commit()
+
+def uvozi_podatke_vlog():
+    df = pd.read_excel("podatki/Tabele.xlsx" ,sheet_name="Sheet2", skiprows=[0],  header=None)
+    for row in df.itertuples():
+        vrstica = list(row)[1:]
+        cur.execute("""
+        INSERT INTO vloge(TRR, vloga,id_oddelek )
+        VALUES 
+        (%s,%s,%s) ;
+        """, vrstica)
+    conn.commit()
+
+#ustvari_tabelo_vlog()
+#pobrisi_tabelo_vlog()
+#uvozi_podatke_vlog()
+
+######Povezovalna tabela med[id_oddelek  in id_produkt]
+
+def ustvari_tabelo_proizvodnja():
+    cur.execute("""
+    CREATE TABLE proizvodnja(
+    id_oddelek INTEGER REFERENCES oddelki(id_oddelek),
+    id_produkt INTEGER REFERENCES produkti(id_produkt)
+    );
+    """)
+    conn.commit()
+
+def pobrisi_tabelo_proizvodnja():
+    cur.execute("""
+    DROP TABLE proizvodnja ;
+    """)
+    conn.commit()
+
+def uvozi_podatke_proizvodnja():
+    df = pd.read_excel("podatki/Tabele.xlsx" ,sheet_name="Sheet4", skiprows=[0],  header=None)
+    for row in df.itertuples():
+        vrstica = list(row)[1:]
+        cur.execute("""
+        INSERT INTO proizvodnja(id_oddelek , id_produkt)
+        VALUES (%s, %s);
+        """,vrstica)
+    conn.commit()
+
+#ustvari_tabelo_proizvodnja()
+#uvozi_podatke_proizvodnja()
+
+
+
+
+#Tulele je nekaj funkcij k sem jih uporabil da sem preveril če stvar dela
+#ni relevantno 
 def pomoc_dodaj_zaposleni():
     r = ["petja","murnik", "nkei","jsc","123","tsive0","asla",12,12]
     cur.execute("""
