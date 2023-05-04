@@ -26,13 +26,9 @@ DB_PORT = os.environ.get('POSTGRES_PORT', 5432)
 def static(filename):
     return static_file(filename, root='static')
 
-
 @get("/")
 def index():
     return template('zacetna.html', osebe = cur)
-
-
-
 
 ###################
 #proba za zaposlene 

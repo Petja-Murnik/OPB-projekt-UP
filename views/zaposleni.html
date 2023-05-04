@@ -1,22 +1,27 @@
 
 %rebase('osnova.html', naslov='Komitenti banke')
 
-
 <table cellpadding="0" cellspacing="0" border="1">
     <tr>
-        <th>Ime in priimek</th>
+        <th>Ime</th>
+        <th>Priimek</th>
         <th>Naslov</th>
         <th>Mesto</th>
         <th>TRR</th>
+        <th>Uporabniško ime</th>
+        <th>Geslo</th>
         <th>Plača</th>
         <th>Število ur</th>
      </tr>
-     %for (ime_priimek,naslov,mesto,trr,placa,stevilo_ur) in zaposlene:
+     %for (ime ,priimek , naslov, mesto , trr,uporabnisko_ime , geslo , placa, stevilo_ur) in zaposlene:
      <tr>
-        <td>{{ime_priimek}}</td>
+        <td>{{ime}}</td>
+        <td>{{priimek}}</td>
         <td>{{naslov}}</td>
         <td>{{mesto}}</td>
         <td>{{trr}}</td>
+        <td>{{uporabnisko_ime}}</td>
+        <td>{{geslo}}</td>
         <td>{{placa}}</td>
         <td>{{stevilo_ur}}</td>
      </tr>
