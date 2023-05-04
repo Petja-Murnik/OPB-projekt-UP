@@ -37,6 +37,41 @@ def zaposleni_get():
     cur.execute("SELECT * FROM zaposleni")
     return template("zaposleni.html",  zaposlene=cur)
 
+@get("/dodaj_zaposlenega")
+def dodaj_zaposlenega_get():
+    return template("dodaj_zaposlenega.html",
+                    ime = "",priimek = '',mesto = '',naslov = '',trr = '', uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='')
+
+@post('/dodaj_zaposlenega')
+def dodaj_zaposlenega_post():
+    if False:
+        "ti sment ne smes redirect"
+    else:
+        ime = request.forms.ime
+        priimek = request.forms.priimek
+        mesto = request.forms.mesto
+        naslov = request.forms.naslov
+        trr = request.forms.trr
+        uporabnisko_ime = request.forms.uporabnisko_ime
+        geslo = request.forms.geslo
+        placa = request.forms.placa
+        st_ur = request.forms.st_ur
+        vloga =request.forms.vloga
+        oddelek = request.forms.oddelek
+    try: 
+        cur.execute("""INSERT INTO zaposleni 
+            VALUES(%s, %s,%s,%s,%s,%s,%s,%s,%s );""",
+            (ime, priimek, mesto, naslov,trr,uporabnisko_ime,
+             geslo, placa,st_ur))
+        cur.execute("""INSERT INTO vloge
+            VALUES(%s,%s,%s);""",trr, vloga,oddelek)
+        conn.commit()
+    except:
+        conn.rollback()
+        return template('dodaj_zaposlenega.html')
+    redirect(url("zaposleni"))
+
+
 
 
 
