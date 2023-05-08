@@ -60,11 +60,13 @@ def dodaj_zaposlenega_post():
         oddelek = request.forms.oddelek
     try: 
         cur.execute("""INSERT INTO zaposleni 
-            VALUES(%s, %s,%s,%s,%s,%s,%s,%s,%s );""",
+            (ime, priimek, mesto, naslov,TRR,uporabnisko_ime,
+             geslo, placa,st_ur) 
+            VALUES(%s, %s,%s,%s,%s,%s,%s,%s,%s )""",
             (ime, priimek, mesto, naslov,trr,uporabnisko_ime,
              geslo, placa,st_ur))
         cur.execute("""INSERT INTO vloge
-            VALUES(%s,%s,%s);""",trr, vloga,oddelek)
+            VALUES(%s,%s,%s);""",(trr, vloga,oddelek))
         conn.commit()
     except:
         conn.rollback()
