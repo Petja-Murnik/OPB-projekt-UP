@@ -2,7 +2,9 @@
 
 <p>Dodajanje novega zaposlenega</p>
 
-
+%if napaka:
+  <p class="opozorilo">{{napaka}}</p>
+%end
 <!-- ime = "",priimek = '',mesto = '',naslov = '',trr = '', uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='' -->
 
 <form action="{{url('/dodaj_zaposlenega')}}" method="POST">
@@ -12,8 +14,8 @@
     <p>TRR: <input name="TRR" type="text" value="{{trr}}" required></p>
     <p>Uporabniško ime:<input name="Uporabniško ime" type="text" value="{{uporabnisko_ime}}" required></p>
     <p>Geslo:<input name="Geslo" type="text" value="{{geslo}}" required></p>
-    <p>Plača:<input name="Plača" type="text" value="{{placa}}" required></p>
-    <p>Število ur:<input name="Število ur" type="text" value="{{st_ur}}" required></p>
+    <p>Plača:<input name="Plača" type="number" value="{{placa}}" required></p>
+    <p>Število ur:<input name="Število ur" type="number" value="{{st_ur}}" required></p>
     <p>
         <label for="vloga">Vloga: </label>
         <select id="vloga" name="vloga">

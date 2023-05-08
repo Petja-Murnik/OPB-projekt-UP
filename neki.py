@@ -40,7 +40,7 @@ def zaposleni_get():
 @get("/dodaj_zaposlenega")
 def dodaj_zaposlenega_get():
     return template("dodaj_zaposlenega.html",
-                    ime = "",priimek = '',mesto = '',naslov = '',trr = '', uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='')
+                    ime = "",priimek = '',mesto = '',naslov = '',trr = "", uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= None)
 
 @post('/dodaj_zaposlenega')
 def dodaj_zaposlenega_post():
@@ -61,16 +61,17 @@ def dodaj_zaposlenega_post():
     try: 
         cur.execute("""INSERT INTO zaposleni 
             (ime, priimek, mesto, naslov,TRR,uporabnisko_ime,
-             geslo, placa,st_ur) 
+             geslo, placa,stevilo_ur) 
             VALUES(%s, %s,%s,%s,%s,%s,%s,%s,%s )""",
             (ime, priimek, mesto, naslov,trr,uporabnisko_ime,
              geslo, placa,st_ur))
         cur.execute("""INSERT INTO vloge
             VALUES(%s,%s,%s);""",(trr, vloga,oddelek))
         conn.commit()
-    except:
+    except Exception as ex:
         conn.rollback()
-        return template('dodaj_zaposlenega.html')
+        return template('dodaj_zaposlenega.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
+                         uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("zaposleni"))
 
 
