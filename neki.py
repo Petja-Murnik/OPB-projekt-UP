@@ -143,11 +143,32 @@ def prijava_post():
     redirect(url('zacetna'))
 
 
-#odjava
-#@get('/odjava/')
-#def odjava_get():
-#    response.delete_cookie('uporabnisko_ime')
-#    redirect(url('index'))
+@get('/odjava')
+def odjava():
+    """
+    Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
+    """
+    
+    response.delete_cookie("uporabnik")
+    response.delete_cookie("rola")
+    
+    return template('prijava.html', napaka=None)
+
+#to dostopata samo admin in vodje, treba dat piškotk še
+@get('/dodaj_izdelek')
+def dodaj_izdelek():
+
+   
+    # vrnemo template za dodajanje izdelka
+    return template('dodaj_izdelek.html')
+
+@post('/dodaj_izdelek')
+def dodaj_izdelek_post():
+
+    id_produkt = int(request.forms.get('id_produkt'))
+    prodajna_cena = int(request.forms.get('prodajna_cena'))
+    nabavna_cena = int(request.forms.get('nabavna_cena'))
+    ime_produkt = str(request.forms.get('ime_produkt'))
 
 
 #KODE ZA KOŠARICO, SEZNAM KUPLJENIH STVARI...
