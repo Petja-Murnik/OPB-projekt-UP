@@ -47,17 +47,17 @@ def dodaj_zaposlenega_post():
     if False:
         "ti sment ne smes redirect"
     else:
-        ime = request.forms.ime
-        priimek = request.forms.priimek
-        mesto = request.forms.mesto
-        naslov = request.forms.naslov
-        trr = request.forms.trr
-        uporabnisko_ime = request.forms.uporabnisko_ime
-        geslo = request.forms.geslo
-        placa = request.forms.placa
-        st_ur = request.forms.st_ur
-        vloga =request.forms.vloga
-        oddelek = request.forms.oddelek
+        ime = request.forms.get('Ime')
+        priimek = request.forms.get('Priimek')
+        mesto = request.forms.get('Mesto')
+        naslov = request.forms.get('Naslov')
+        trr = request.forms.get('TRR')
+        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+        geslo = request.forms.get('Geslo')
+        placa = request.forms.get('Placa')
+        st_ur = request.forms.get('Stevilo_ur')
+        vloga = request.forms.get('Vloga')
+        oddelek = request.forms.get('Oddelek')
     try: 
         cur.execute("""INSERT INTO zaposleni 
             (ime, priimek, mesto, naslov,TRR,uporabnisko_ime,
@@ -104,16 +104,17 @@ def registracija_get():
 
 @post('/registracija/')
 def registracija_post():
-    ime = request.forms.ime
-    priimek = request.forms.priimek
-    naslov = request.forms.naslov
-    mesto = request.forms.mesto
-    drzava = request.forms.mesto
-    TRR = request.forms.TRR
-    email = request.forms.email
-    uporabnisko_ime = request.forms.uporabnisko_ime
-    geslo = request.forms.geslo
-    geslo2 = request.forms.geslo2
+    ime = request.forms.get('Ime')
+    priimek = request.forms.get('Priimek')
+    mesto = request.forms.get('Mesto')
+    naslov = request.forms.get('Naslov')
+    trr = request.forms.get('TRR')
+    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+    geslo = request.forms.get('Geslo')
+    placa = request.forms.get('Placa')
+    st_ur = request.forms.get('Stevilo_ur')
+    vloga = request.forms.get('Vloga')
+    oddelek = request.forms.get('Oddelek')
 
 @get('/prijava/')
 def prijava_get():
@@ -122,8 +123,8 @@ def prijava_get():
 
 @post('/prijava/')
 def prijava_post():
-    uporabnisko_ime = request.forms.uporabnisko_ime
-    geslo = request.forms.geslo
+    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+    geslo = request.forms.get('Geslo')
     if uporabnisko_ime is None or geslo is None:
         redirect(url('prijava_get'))
         return
