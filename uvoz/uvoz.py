@@ -48,6 +48,7 @@ def uvozi_podatke_zaposlenih():
             """ , r)
     conn.commit()
 
+#pobrisi_tabelo_vlog()
 #pobrisi_tabelo_zaposlenih()
 #ustvari_tabelo_zaposlenih()
 #uvozi_podatke_zaposlenih()

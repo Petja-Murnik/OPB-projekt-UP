@@ -5,7 +5,7 @@
 from bottleext import get, post, run, request, template, redirect, static_file, url
 
 # uvozimo ustrezne podatke za povezavo
-import uvoz.auth_public as auth
+from uvoz import auth_public as auth
 
 # uvozimo psycopg2
 import psycopg2, psycopg2.extensions, psycopg2.extras
@@ -18,6 +18,12 @@ import hashlib
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
 DB_PORT = os.environ.get('POSTGRES_PORT', 5432)
+# priklopimo se na bazo
+conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=DB_PORT)
+#conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
+cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+
+
 
 #za debugiranje
 #debuger(True)
@@ -72,7 +78,7 @@ def dodaj_zaposlenega_post():
         conn.rollback()
         return template('dodaj_zaposlenega.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
                          uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= 'Zgodila se je napaka: %s' % ex)
-    redirect(url("zaposleni"))
+    redirect(url("zaposleni_get"))
 
 
 
@@ -81,10 +87,6 @@ def dodaj_zaposlenega_post():
 ######################################################################
 # Glavni program
 
-# priklopimo se na bazo
-conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password, port=DB_PORT)
-#conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
-cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 # poženemo strežnik na podanih vratih, npr. http://localhost:8080/
 if __name__ == "__main__":
