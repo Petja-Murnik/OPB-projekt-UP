@@ -118,10 +118,6 @@ def registracija_post():
     vloga = request.forms.get('Vloga')
     oddelek = request.forms.get('Oddelek')
 
-@get('/prijava/')
-def prijava_get():
-    napaka2 = None
-    return template('login.html', napaka2=napaka2)
 
 @post('/prijava/')
 def prijava_post():
@@ -142,8 +138,7 @@ def prijava_post():
         return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if hashGesla(geslo) != hashBaza:
         return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
-    response.set_cookie('uporabnisko_ime', uporabnisko_ime, secret=skrivnost)
-    redirect(url('zacetna'))
+    redirect(url('prijava_post'))
 
 
 @get('/odjava')
