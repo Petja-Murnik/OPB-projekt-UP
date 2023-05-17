@@ -1,7 +1,7 @@
 %rebase('Form osnova.html', naslov='Registracija')
 
-<body class="text-center">
-<form class="form-signin" method="post">
+
+  <form action="{{url('prijava_post')}}" method="POST">
   <h1 class="h3 mb-3 font-weight-normal">Registracija</h1>
   <label for="inputUsername" class="sr-only">Uporabniško ime</label>
   <input type="username" id="inputUsername" class="form-control" placeholder="Uporabnisko ime" name="username" required autofocus>
@@ -16,4 +16,3 @@
 
 
 </form>
-</body>

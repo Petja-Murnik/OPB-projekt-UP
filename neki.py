@@ -88,9 +88,7 @@ def dodaj_zaposlenega_post():
 # Glavni program
 
 
-# poženemo strežnik na podanih vratih, npr. http://localhost:8080/
-if __name__ == "__main__":
-    run(host='localhost', port=SERVER_PORT, reloader=RELOADER)
+
 
 #OSNUTEK KODE ZA PRIJAVO IN REGISTRACIJO
 def hashGesla(s):
@@ -118,9 +116,13 @@ def registracija_post():
     vloga = request.forms.get('Vloga')
     oddelek = request.forms.get('Oddelek')
 
+@get("/petja/")
+def petja_get():
+    return "šalal"
+
 @get('/prijava/') 
 def prijava_get():
-    return template("login.html")
+    return template("login.html", uporabnisko_ime = "", geslo = "")
 
 @post('/prijava/')
 def prijava_post():
@@ -173,3 +175,13 @@ def dodaj_izdelek_post():
 
 
 #KODE ZA KOŠARICO, SEZNAM KUPLJENIH STVARI...
+
+
+
+
+
+
+#TO MORE BITI TUKAJ SPODAJ KODO PIŠI VIŠJE !!!
+# poženemo strežnik na podanih vratih, npr. http://localhost:8080/
+if __name__ == "__main__":
+    run(host='localhost', port=SERVER_PORT, reloader=RELOADER)
