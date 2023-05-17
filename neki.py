@@ -122,7 +122,7 @@ def petja_get():
 
 @get('/prijava/') 
 def prijava_get():
-    return template("login.html", uporabnisko_ime = "", geslo = "")
+    return template("login.html", uporabnisko_ime = "", geslo = "",napaka  = None)
 
 @post('/prijava/')
 def prijava_post():
@@ -143,7 +143,7 @@ def prijava_post():
         return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if hashGesla(geslo) != hashBaza:
         return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
-    redirect(url('prijava_get'))
+    redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 
 @get('/odjava')
