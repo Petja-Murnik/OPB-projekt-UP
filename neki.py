@@ -118,6 +118,9 @@ def registracija_post():
     vloga = request.forms.get('Vloga')
     oddelek = request.forms.get('Oddelek')
 
+@get('/prijava/') 
+def prijava_get():
+    return template("login.html")
 
 @post('/prijava/')
 def prijava_post():
@@ -129,7 +132,7 @@ def prijava_post():
     oseba = cur   
     hashBaza = None
     try: 
-        hashBaza = cur.execute("SELECT geslo FROM oseba WHERE uporabnisko_ime = %s", (uporabnisko_ime, ))
+        hashBaza = cur.execute("SELECT geslo FROM kupci WHERE Uporabnisko_ime = %s", [uporabnisko_ime])
         hashBaza = cur.fetchone()
         hashBaza = hashBaza[0]
     except:
@@ -138,7 +141,7 @@ def prijava_post():
         return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if hashGesla(geslo) != hashBaza:
         return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
-    redirect(url('prijava_post'))
+    redirect(url('prijava_get'))
 
 
 @get('/odjava')
