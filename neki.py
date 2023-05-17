@@ -158,20 +158,36 @@ def odjava():
     return template('prijava.html', napaka=None)
 
 #to dostopata samo admin in vodje, treba dat piškotk še
-@get('/dodaj_izdelek')
-def dodaj_izdelek():
+@get("/produkti/")
+def produkti_get():
+    cur.execute("SELECT * from produkti")
+    return template("produkti.html", produkti=cur)
 
-   
-    # vrnemo template za dodajanje izdelka
-    return template('dodaj_izdelek.html')
+@get("/dodaj_produkt")
+def dodaj_produkt_get():
+    return template("dodaj_produkt.html",
+                    id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= None)
 
-@post('/dodaj_izdelek')
-def dodaj_izdelek_post():
+@post('/dodaj_produkt')
+def dodaj_produkt_post():
+    if False:
+        "pri produktih je nekaj narobe"
+    else:
+        id_produkt = int(request.forms.get('id_produkt'))
+        prodajna_cena = int(request.forms.get('prodajna_cena'))
+        nabavna_cena = int(request.forms.get('nabavna_cena'))
+        ime_produkt = str(request.forms.get('ime_produkt'))
+    try: 
+        cur.execute("""INSERT INTO produkti 
+            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) 
+            VALUES(%s, %s, %s, %s)""",
+            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
+        conn.commit()
+    except Exception as ex:
+        conn.rollback()
+        return template('dodaj_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
+    redirect(url("produkti_get"))
 
-    id_produkt = int(request.forms.get('id_produkt'))
-    prodajna_cena = int(request.forms.get('prodajna_cena'))
-    nabavna_cena = int(request.forms.get('nabavna_cena'))
-    ime_produkt = str(request.forms.get('ime_produkt'))
 
 
 #KODE ZA KOŠARICO, SEZNAM KUPLJENIH STVARI...

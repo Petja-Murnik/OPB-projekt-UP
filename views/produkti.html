@@ -1,0 +1,24 @@
+%rebase('osnova.html', naslov='produkti (noro, drugic)')
+
+<table cellpadding="0" cellspacing="0" border="1">
+    <tr>
+        <th>Id. produkta</th>
+        <th>Prodajna cena produkta</th>
+        <th>Nabavna cena produkta</th>
+        <th>Ime produkta</th>
+        
+     </tr>
+     %for (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) in produkti:
+     <tr>
+        <td>{{id_produkt}}</td>
+        <td>{{prodajna_cena}}</td>
+        <td>{{nabavna_cena}}</td>
+        <td>{{ime_produkt}}</td>
+     </tr>
+   %end    
+</table>
+
+
+%if True:
+
+<a href="/dodaj_produkt" class="myButton" >Dodaj produkt</a>

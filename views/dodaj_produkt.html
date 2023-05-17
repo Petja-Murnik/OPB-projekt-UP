@@ -1,0 +1,19 @@
+%rebase('osnova.html', naslov='produkti (noro)')
+
+<p>Dodajanje novega produkta</p>
+
+%if napaka:
+  <p class="opozorilo">{{napaka}}</p>
+%end
+<!-- id_produkt = "", prodajna_cena = '', nabavna_cena = '', ime_produkt = '' -->
+
+<form action="{{url('dodaj_produkt_post')}}" method="POST">
+    <p>Id. produkta: <input name="id_produkt" type="number" value="{{id_produkt}}" required></p>
+    <p>Prodajna cena produkta: <input name="prodajna_cena" type="number" value="{{prodajna_cena}}" required></p>
+    <p>Nabavna cena produkta: <input name="nabavna_cena" type="number" value="{{nabavna_cena}}" required></p>
+    <p>Ime produkta: <input name="ime_produkt" type="text" value="{{ime_produkt}}" required></p>
+
+    <p><input type="submit" value="Dodaj"></p>
+
+</form>
+
