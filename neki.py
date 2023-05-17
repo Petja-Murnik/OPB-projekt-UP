@@ -37,7 +37,6 @@ def index():
     return template('zacetna.html', osebe = cur)
 
 ###################
-#proba za zaposlene 
 @get("/zaposleni/")
 def zaposleni_get():
     cur.execute("SELECT * FROM zaposleni")
@@ -80,6 +79,52 @@ def dodaj_zaposlenega_post():
                          uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("zaposleni_get"))
 
+@get("/place/")
+#@cookie required ?
+def place():
+    if False:
+        "TI baraba nesmes!"
+    else:
+        cur.execute("""
+            DROP VIEW IF EXISTS ime_priimek_placa;""")
+        conn.commit()
+        cur.execute("""
+            CREATE VIEW ime_priimek_placa AS 
+            SELECT ime || ' ' || priimek AS ime_priimek, placa 
+            FROM zaposleni;
+            SELECT * FROM ime_priimek_placa;
+            """)
+        conn.commit()
+        results = cur.fetchall()
+        print("Number of rows fetched:", len(results))
+        print("Fetched rows:", results)
+    return template("place.html",place = results)
+
+@get("/spremeni_placo")
+#cookie required ?
+def spremeni_placo_get():
+    return template("spremeni_placo.html", trr = "",nova_placa = "", napaka= None)
+
+
+@post("/spremeni_placo")
+#@cookie required ? 
+def spremeni_placo_post():
+    if False:
+        "TI sment pa tega ne smes"
+    else:
+        trr = request.forms.get("TRR")
+        nova_placa = request.forms.get("Nova placa")
+    try:
+        cur.execute("""UPDATE zaposleni
+            SET placa = %s
+            WHERE trr = %s;
+            """,(nova_placa, trr))
+        conn.commit()
+    except Exception as ex:
+        conn.rollback()
+        return template("spremeni_placo.html", trr = "",nova_placa = "", napaka= 'Zgodila se je napaka: %s' % ex)
+    return(url("place"))
+        
 
 
 

@@ -1,0 +1,17 @@
+%rebase('osnova.html', naslov='Komitenti banke')
+
+<p>Dodajanje novega zaposlenega</p>
+
+%if napaka:
+  <p class="opozorilo">{{napaka}}</p>
+%end
+
+
+<form action="{{url('spremeni_placo_post')}}" method="POST">
+    <p>TRR: <input name="TRR" type="text" value="{{trr}}" required></p>
+    <p>Nova plača:<input name="Nova placa" type="number" value="{{nova_placa}}" required></p>
+
+    <p><input type="submit" value="Spremeni"></p>
+
+</form>
+
