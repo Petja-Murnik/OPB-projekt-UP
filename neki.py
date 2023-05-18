@@ -174,7 +174,7 @@ def prijava_post():
     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
     geslo = request.forms.get('Geslo')
     if uporabnisko_ime is None or geslo is None:
-        redirect(url('prijava_get'))      
+        redirect(url(''))      
     oseba = cur   
     hashBaza = None
     try: 
@@ -187,8 +187,12 @@ def prijava_post():
         print("BBB")
     if hashBaza is None:
         return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
-    if hashGesla(geslo) != hashBaza:
+    if geslo != hashBaza:
         return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo == hashBaza:
+        return print("bravo pravo geslo")
+    else:
+        return print("tu te ni")
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 
