@@ -316,10 +316,35 @@ def prijava_zaposleni_post():
         return print("tu te ni")
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
+###############KOŠARICA IN NJENA VSEBINA################################
+def vsebina_kosare():
+    """Funkcija za pridobivanje vsebine košarice kot množice."""
+    kosara = request.get_cookie('kosara')#, secret=secret)
 
+    if kosara is None:
+        return set()
+    
+@get('/kosarica/')
+def kosara():
+    uporabnisko_ime = uporabnisko_ime()
+    kosara = vsebina_kosare()
+    izdelki = []
 
+    if len(kosara) == 0:
+        napaka = 'Vaša košarica je prazna.'
+        izrisi = False
+    else:
+        napaka = None
+        cur.execute("SELECT * FROM produkti WHERE id_produkt IN ({})".format(", ".join("%s" for _ in kosara)), tuple(kosara))
+        izdelki = cur.fetchall()
+    return template("kosarica.html")
 
-
+@post('/dodaj_v_kosaro/:x/')
+def dodaj_v_kosaro(x):
+    kosara = vsebina_kosare()
+    kosara.symmetric_difference_update({x})  # doda v košaro, če ga še ni, sicer ga odstrani
+    response.set_cookie('kosara')#, json.dumps(list(kosara)), path='/', secret=secret)
+    redirect("/izdelek/{}/".format(x))
 
 
 #POMOŽNA KODA ZA COOKIE
