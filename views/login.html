@@ -6,9 +6,9 @@
   <form action="{{url('prijava_post')}}" method="POST">
   <h1 class="h3 mb-3 font-weight-normal">Registracija</h1>
   <label for="inputUsername" class="sr-only">Uporabniško ime</label>
-  <input type="username" id="inputUsername" class="form-control" placeholder="Uporabnisko ime" name="uporabnisko_ime" required autofocus>
+  <input type="username" id="inputUsername" class="form-control" placeholder="Uporabnisko ime" name="Uporabnisko_ime" value = "{{uporabnisko_ime}}" required autofocus>
   <label for="inputPassword" class="sr-only">Geslo</label>
-  <input type="password" id="inputPassword1" class="form-control" placeholder="Geslo" name="Geslo" required>
+  <input type="password" id="inputPassword1" class="form-control" placeholder="Geslo" name="Geslo" value = "{{geslo}}" required>
   
 
 <button class="btn btn-lg btn-primary btn-block" type="submit">Prijava</button>
