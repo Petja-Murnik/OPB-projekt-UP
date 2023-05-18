@@ -142,24 +142,58 @@ def hashGesla(s):
     return m.hexdigest()
 
 
-@get('/registracija/')
-def registracija_get():
-    napaka = None
-    return template('register.html', napaka=napaka)
+# @get('/registracija/')
+# def registracija_get():
+#     napaka = None
+#     return template('register.html', napaka=napaka)
 
-@post('/registracija/')
-def registracija_post():
-    ime = request.forms.get('Ime')
-    priimek = request.forms.get('Priimek')
-    mesto = request.forms.get('Mesto')
-    naslov = request.forms.get('Naslov')
-    trr = request.forms.get('TRR')
-    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-    geslo = request.forms.get('Geslo')
-    placa = request.forms.get('Placa')
-    st_ur = request.forms.get('Stevilo_ur')
-    vloga = request.forms.get('Vloga')
-    oddelek = request.forms.get('Oddelek')
+# @post('/registracija/')
+# def registracija_post():
+    
+#     ime = request.forms.get('Ime')
+#     priimek = request.forms.get('Priimek')
+#     mesto = request.forms.get('Mesto')
+#     naslov = request.forms.get('Naslov')
+#     trr = request.forms.get('TRR')
+#     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+#     geslo = request.forms.get('Geslo')
+#     placa = request.forms.get('Placa')
+#     st_ur = request.forms.get('Stevilo_ur')
+#     vloga = request.forms.get('Vloga')
+#     oddelek = request.forms.get('Oddelek')
+
+#     uporabnik1 =
+@get("/dodaj_kupec")
+def dodaj_kupec_get():
+    return template("register.html",
+                    ime = "",priimek = '',mesto = '',naslov = '',trr = "", uporabnisko_ime ='', geslo ='',napaka= None)
+
+@post('/dodaj_kupec')
+def dodaj_kupec_post():
+    if False:
+        "ti sment ne smes redirect"
+    else:
+        ime = request.forms.get('Ime')
+        priimek = request.forms.get('Priimek')
+        naslov = request.forms.get('Naslov')
+        mesto = request.forms.get('Mesto')
+        trr = request.forms.get('TRR')
+        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+        geslo = request.forms.get('Geslo')
+    try: 
+        cur.execute("""INSERT INTO kupci 
+            (ime, priimek, naslov, mesto,trr,uporabnisko_ime,
+             geslo) 
+            VALUES(%s, %s,%s,%s,%s,%s,%s)""",
+            (ime, priimek, mesto, naslov,trr,uporabnisko_ime,
+             geslo))
+        conn.commit()
+    except Exception as ex:
+        conn.rollback()
+        return template('register.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
+                         uporabnisko_ime ='', geslo ='',napaka= 'Zgodila se je napaka: %s' % ex)
+    redirect(url("/"))
+
 
 @get("/petja/")
 def petja_get():
