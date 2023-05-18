@@ -167,27 +167,28 @@ def petja_get():
 
 @get('/prijava/') 
 def prijava_get():
-    return template("login.html", uporabnisko_ime = "", geslo = "",napaka  = None)
+    return template("login.html", uporabnisko_ime = "", geslo = "",napaka2  = None)
 
 @post('/prijava/')
 def prijava_post():
     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
     geslo = request.forms.get('Geslo')
     if uporabnisko_ime is None or geslo is None:
-        redirect(url('prijava_get'))
-        return
+        redirect(url('prijava_get'))      
     oseba = cur   
     hashBaza = None
     try: 
-        hashBaza = cur.execute("SELECT geslo FROM kupci WHERE Uporabnisko_ime = %s", [uporabnisko_ime])
+        hashBaza = cur.execute("SELECT geslo FROM kupci WHERE uporabnisko_ime = %s", [uporabnisko_ime])
         hashBaza = cur.fetchone()
         hashBaza = hashBaza[0]
+        print("AA")
     except:
-        hashBaza = None
+        hashBaza = None 
+        print("BBB")
     if hashBaza is None:
-        return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if hashGesla(geslo) != hashBaza:
-        return template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 

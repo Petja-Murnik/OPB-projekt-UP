@@ -1,16 +1,16 @@
 %rebase('osnova.html', naslov='Registracija')
-
+%if napaka2:
+  <p class="opozorilo">{{napaka2}}</p>
+%end
 
   <form action="{{url('prijava_post')}}" method="POST">
   <h1 class="h3 mb-3 font-weight-normal">Registracija</h1>
   <label for="inputUsername" class="sr-only">Uporabniško ime</label>
-  <input type="username" id="inputUsername" class="form-control" placeholder="Uporabnisko ime" name="username" required autofocus>
+  <input type="username" id="inputUsername" class="form-control" placeholder="Uporabnisko ime" name="uporabnisko_ime" required autofocus>
   <label for="inputPassword" class="sr-only">Geslo</label>
-  <input type="password" id="inputPassword1" class="form-control" placeholder="Geslo" name="password1" required>
+  <input type="password" id="inputPassword1" class="form-control" placeholder="Geslo" name="Geslo" required>
   
-  %if napaka:
-  <div class="alert alert-warning">{{napaka}}</div>
-%end
+
 <button class="btn btn-lg btn-primary btn-block" type="submit">Prijava</button>
 <a class="btn btn-lg btn-primary btn-block" href="/Register">Registracija</a>
 
