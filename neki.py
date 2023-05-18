@@ -3,6 +3,7 @@
 
 # uvozimo bottle.py
 from bottleext import get, post, run, request, template, redirect, static_file, url
+from bottle import response
 
 # uvozimo ustrezne podatke za povezavo
 from uvoz import auth_public as auth
@@ -26,7 +27,7 @@ cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 
 #za debugiranje
-#debuger(True)
+#debug(True)
 
 @get('/static/<filename:path>')
 def static(filename):
@@ -208,7 +209,7 @@ def prijava_post():
     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
     geslo = request.forms.get('Geslo')
     if uporabnisko_ime is None or geslo is None:
-        redirect(url('prijava_get'))      
+        redirect(url(''))      
     oseba = cur   
     hashBaza = None
     try: 
@@ -221,9 +222,15 @@ def prijava_post():
         print("BBB")
     if hashBaza is None:
         return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
-    if hashGesla(geslo) != hashBaza:
+    if geslo != hashBaza:
         return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo == hashBaza:
+        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
+        return print(request.get_cookie("uporabnisko_ime"))     
+    else:
+        return print("tu te ni")
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
+
 
 
 @get('/odjava')
@@ -268,9 +275,69 @@ def dodaj_produkt_post():
         return template('dodaj_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("produkti_get"))
 
+#PRIJAVA zaposleni
+@get('/prijava_zaposleni/') 
+def prijava_zaposleni_get():
+    return template("prijava_zaposleni.html", uporabnisko_ime = "", geslo = "",napaka2  = None)
+
+@post('/prijava_zaposleni/')
+def prijava_zaposleni_post():
+    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+    geslo = request.forms.get('Geslo')
+    if uporabnisko_ime is None or geslo is None:
+        redirect(url(''))      
+    oseba = cur   
+    hashBaza = None
+    try: 
+        hashBaza = cur.execute("SELECT geslo FROM zaposleni WHERE uporabnisko_ime = %s", [uporabnisko_ime])
+        hashBaza = cur.fetchone()
+        hashBaza = hashBaza[0]
+        print("AA")
+    except:
+        hashBaza = None 
+        print("BBB")
+    if hashBaza is None:
+        return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo != hashBaza:
+        return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo == hashBaza:
+        cur.execute("""
+            DROP VIEW IF EXISTS vlogice;
+            CREATE VIEW vlogice_view AS 
+            zaposleni LEFT JOIN vloge ON zaposleni.trr = vloge.trr;
+            SELECT vlogice_view.vloga WHERE vlogice_view.uporabnisko_ime = %s;
+            """, uporabnisko_ime)
+        conn.commit()
+        vloga_za_cookie = cur.fetchone()
+        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
+        response.set_cookie("vloga",vloga_za_cookie)
+        return print("bravo pravo geslo")     
+    else:
+        return print("tu te ni")
+    redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 
-#KODE ZA KOŠARICO, SEZNAM KUPLJENIH STVARI...
+
+
+
+
+
+#POMOŽNA KODA ZA COOKIE
+def cookie_required(f):
+    """
+    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za prijavo.
+    """
+    @wraps(f)
+    def decorated( *args, **kwargs):
+        cookie = request.get_cookie("uporabnik")
+        if cookie:
+            return f(*args, **kwargs)
+        return template("zacetna.html")
+
+     
+        
+        
+    return decorated
 
 
 
