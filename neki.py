@@ -206,24 +206,58 @@ def hashGesla(s):
     return m.hexdigest()
 
 
-@get('/registracija/')
-def registracija_get():
-    napaka = None
-    return template('register.html', napaka=napaka)
+# @get('/registracija/')
+# def registracija_get():
+#     napaka = None
+#     return template('register.html', napaka=napaka)
 
-@post('/registracija/')
-def registracija_post():
-    ime = request.forms.get('Ime')
-    priimek = request.forms.get('Priimek')
-    mesto = request.forms.get('Mesto')
-    naslov = request.forms.get('Naslov')
-    trr = request.forms.get('TRR')
-    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-    geslo = request.forms.get('Geslo')
-    placa = request.forms.get('Placa')
-    st_ur = request.forms.get('Stevilo_ur')
-    vloga = request.forms.get('Vloga')
-    oddelek = request.forms.get('Oddelek')
+# @post('/registracija/')
+# def registracija_post():
+    
+#     ime = request.forms.get('Ime')
+#     priimek = request.forms.get('Priimek')
+#     mesto = request.forms.get('Mesto')
+#     naslov = request.forms.get('Naslov')
+#     trr = request.forms.get('TRR')
+#     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+#     geslo = request.forms.get('Geslo')
+#     placa = request.forms.get('Placa')
+#     st_ur = request.forms.get('Stevilo_ur')
+#     vloga = request.forms.get('Vloga')
+#     oddelek = request.forms.get('Oddelek')
+
+#     uporabnik1 =
+@get("/dodaj_kupec")
+def dodaj_kupec_get():
+    return template("register.html",
+                    ime = "",priimek = '',mesto = '',naslov = '',trr = "", uporabnisko_ime ='', geslo ='',napaka= None)
+
+@post('/dodaj_kupec')
+def dodaj_kupec_post():
+    if False:
+        "ti sment ne smes redirect"
+    else:
+        ime = request.forms.get('Ime')
+        priimek = request.forms.get('Priimek')
+        naslov = request.forms.get('Naslov')
+        mesto = request.forms.get('Mesto')
+        trr = request.forms.get('TRR')
+        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+        geslo = request.forms.get('Geslo')
+    try: 
+        cur.execute("""INSERT INTO kupci 
+            (ime, priimek, naslov, mesto,trr,uporabnisko_ime,
+             geslo) 
+            VALUES(%s, %s,%s,%s,%s,%s,%s)""",
+            (ime, priimek, mesto, naslov,trr,uporabnisko_ime,
+             geslo))
+        conn.commit()
+    except Exception as ex:
+        conn.rollback()
+        return template('register.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
+                         uporabnisko_ime ='', geslo ='',napaka= 'Zgodila se je napaka: %s' % ex)
+    redirect(url("/"))
+
 
 @get("/petja/")
 def petja_get():
@@ -355,10 +389,35 @@ def prijava_zaposleni_post():
         return print("tu te ni")
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
+###############KOŠARICA IN NJENA VSEBINA################################
+def vsebina_kosare():
+    """Funkcija za pridobivanje vsebine košarice kot množice."""
+    kosara = request.get_cookie('kosara')#, secret=secret)
 
+    if kosara is None:
+        return set()
+    
+@get('/kosarica/')
+def kosara():
+    uporabnisko_ime = uporabnisko_ime()
+    kosara = vsebina_kosare()
+    izdelki = []
 
+    if len(kosara) == 0:
+        napaka = 'Vaša košarica je prazna.'
+        izrisi = False
+    else:
+        napaka = None
+        cur.execute("SELECT * FROM produkti WHERE id_produkt IN ({})".format(", ".join("%s" for _ in kosara)), tuple(kosara))
+        izdelki = cur.fetchall()
+    return template("kosarica.html")
 
-
+@post('/dodaj_v_kosaro/:x/')
+def dodaj_v_kosaro(x):
+    kosara = vsebina_kosare()
+    kosara.symmetric_difference_update({x})  # doda v košaro, če ga še ni, sicer ga odstrani
+    response.set_cookie('kosara')#, json.dumps(list(kosara)), path='/', secret=secret)
+    redirect("/izdelek/{}/".format(x))
 
 
 
