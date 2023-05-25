@@ -41,7 +41,7 @@ def cookie_required_kupec(f):
         cookie = request.get_cookie("uporabnisko_ime")
         if cookie:
             return f(*args, **kwargs)
-        return template("zacetna.html")
+        return template("login.html")
 
     
         
@@ -50,14 +50,14 @@ def cookie_required_kupec(f):
 
 def cookie_required_zaposlen_uporabnisko_ime(f):
     """
-    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za prijavo.
+    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za .
     """
     @wraps(f)
     def decorated( *args, **kwargs):
         cookie = request.get_cookie("uporabnisko_ime")
         if cookie:
             return f(*args, **kwargs)
-        return template("zacetna.html")
+        return template("prijava_zaposleni.html",uporabnisko_ime = "", geslo = "",napaka2  = None)
 
     
         
@@ -73,7 +73,7 @@ def cookie_required_zaposlen_vloga(f):
         cookie = request.get_cookie("vloga")
         if cookie:
             return f(*args, **kwargs)
-        return template("zacetna.html")
+        return template("prijava_zaposleni.html",uporabnisko_ime = "", geslo = "",napaka2  = None)
 
     
         
@@ -96,7 +96,7 @@ def index():
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
 def zaposleni_get():
-    vlogica= request.get_cookie("vloga",secret="skrivnost")
+    vlogica= request.get_cookie("vloga")
     uporabniski_imencek = request.get_cookie("uporabnisko_ime")
     cur.execute("SELECT * FROM zaposleni")
     print(vlogica)
@@ -311,18 +311,19 @@ def odjava():
     return template('prijava.html', napaka=None)
 
 #to dostopata samo admin in vodje, treba dat piškotk še
+
+# PRODUKTI
 @get("/produkti/")
 def produkti_get():
     cur.execute("SELECT * from produkti")
     return template("produkti.html", produkti=cur)
 
-@get("/dodaj_produkt")
-def dodaj_produkt_get():
-    return template("dodaj_produkt.html",
-                    id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= None)
+@get("/produkti/dodaj")
+def produkti_dodaj():
+    return template("uredi_produkt.html")
 
-@post('/dodaj_produkt')
-def dodaj_produkt_post():
+@post('/uredi_produkt')
+def uredi_produkt_post():
     if False:
         "pri produktih je nekaj narobe"
     else:
@@ -338,7 +339,7 @@ def dodaj_produkt_post():
         conn.commit()
     except Exception as ex:
         conn.rollback()
-        return template('dodaj_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
+        return template('uredi_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("produkti_get"))
 
 #PRIJAVA zaposleni
@@ -378,11 +379,11 @@ def prijava_zaposleni_post():
         conn.commit()
         vloga_za_cookie = str(cur.fetchone()[0]) 
         response.set_cookie("uporabnisko_ime",uporabnisko_ime)
-        response.set_cookie("vloga",vloga_za_cookie, secret="skrivnost")
+        response.set_cookie("vloga",vloga_za_cookie)
         cur.execute("SELECT * FROM zaposleni")
         conn.commit()
-        print(request.get_cookie("uporabnisko_ime"))
-        print(request.get_cookie("vloga",secret="skrivnost"))
+#        print(request.get_cookie("uporabnisko_ime"))
+#        print(request.get_cookie("vloga"))
         return template("zaposleni.html",  zaposlene=cur,v=vloga_za_cookie,u=uporabnisko_ime)
         #return print(request.get_cookie("uporabnisko_ime"))        
     else:
@@ -413,6 +414,69 @@ def vsebina_kosare():
     if kosara is None:
         return set()
     
+@post("/produkti/dodaj")
+def produkti_dodaj_post():
+    if False:
+        "pri produktih je nekaj narobe"
+    else:
+        id_produkt = int(request.forms.get('id_produkt'))
+        prodajna_cena = int(request.forms.get('prodajna_cena'))
+        nabavna_cena = int(request.forms.get('nabavna_cena'))
+        ime_produkt = str(request.forms.get('ime_produkt'))
+    try: 
+        cur.execute("""INSERT INTO produkti 
+            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) 
+            VALUES (?, ?, ?, ?)""",
+            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
+        conn.commit()
+    except Exception as ex:
+        conn.rollback()
+        print("Zgodila se je napaka")
+    redirect(url("produkti_get"))
+
+@get("/produkti/uredi/<id_produkt>")
+def produkti_uredi(cur, id_produkt):
+    cur.execute("""
+        SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = ?
+    """, (id_produkt, ))
+    res = cur.fetchone()
+    if res is None:
+        #nastavi_sporocilo(f"Produkti {id_produkt} ne obstaja!")
+        redirect(url('produkti'))
+    id_produkt, prodajna_cena, nabavna_cena, ime_produkt = res
+    return template("uredi_produkt.html", id_produkt=id_produkt, prodajna_cena=prodajna_cena, nabavna_cena=nabavna_cena, ime_produkt=ime_produkt)
+
+
+@post("/produkti/uredi/<id_produkt>")
+def produkti_uredi_post(cur, id_produkt):
+    nov_id_produkt = int(request.forms.get('id_produkt'))
+    prodajna_cena = int(request.forms.get('prodajna_cena'))
+    nabavna_cena = int(request.forms.get('nabavna_cena'))
+    ime_produkt = str(request.forms.get('ime_produkt'))
+    try:
+        cur.execute("""UPDATE produkti
+            SET id_produkt = %s, prodajna_cena = %s, nabavna_cena = %s, ime_produkt = %s
+            WHERE id_produkt = %s;
+            """,(nov_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt))
+        conn.commit()
+    except:
+        #nastavi_sporocilo(f"Urejanje produkta {id_produkt} ni uspelo.")
+        redirect(url('uredi_produkt.html', id_produkt=id_produkt))
+    redirect(url('produkti'))
+
+@post("/produkti/brisi/<id_produkt>")
+def produkti_brisi(cur, id_produkt):
+    cur.execute("""
+        DELETE FROM produkti WHERE id_produkt = ?;
+        """, (id_produkt ))
+        
+# stara metoda - zdej samo za dodajanje 
+@get("/dodaj_produkt")
+def dodaj_produkt_get():
+    return template("uredi_produkt.html",
+                    id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= None)
+
+
 
 @get('/kosarica/')
 def kosara():
