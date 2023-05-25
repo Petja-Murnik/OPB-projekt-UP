@@ -390,6 +390,22 @@ def prijava_zaposleni_post():
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 ###############KOŠARICA IN NJENA VSEBINA################################
+@get('/dodaj_v_kosaro/')
+def dodaj_v_kosaro_get():
+    cur.execute("SELECT prodajna_cena, ime_produkt  FROM produkti")
+    return template("dodaj_v_kosaro.html", dodaj_v_kosaro=cur)
+
+# @post('/dodaj_v_kosaro/')
+# def dodaj_post():
+#     if False:
+#         "pri produktih je nekaj narobe"
+#     else:
+#         prodajna_cena = int(request.forms.get('prodajna_cena'))
+#         ime_produkt = str(request.forms.get('ime_produkt'))
+#     redirect(url('dodaj_get'))
+
+
+
 def vsebina_kosare():
     """Funkcija za pridobivanje vsebine košarice kot množice."""
     kosara = request.get_cookie('kosara')#, secret=secret)
@@ -397,6 +413,7 @@ def vsebina_kosare():
     if kosara is None:
         return set()
     
+
 @get('/kosarica/')
 def kosara():
     uporabnisko_ime = uporabnisko_ime()
@@ -412,12 +429,7 @@ def kosara():
         izdelki = cur.fetchall()
     return template("kosarica.html")
 
-@post('/dodaj_v_kosaro/:x/')
-def dodaj_v_kosaro(x):
-    kosara = vsebina_kosare()
-    kosara.symmetric_difference_update({x})  # doda v košaro, če ga še ni, sicer ga odstrani
-    response.set_cookie('kosara')#, json.dumps(list(kosara)), path='/', secret=secret)
-    redirect("/izdelek/{}/".format(x))
+
 
 
 
