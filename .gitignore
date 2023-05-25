@@ -130,3 +130,5 @@ dmypy.json
 
 
 auth_public.py
+
+uvoz/auth_public.py
