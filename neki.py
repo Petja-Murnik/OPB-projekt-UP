@@ -369,19 +369,15 @@ def prijava_zaposleni_post():
         return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if geslo == hashBaza:
         cur.execute("""
-            DROP VIEW IF EXISTS vlogice_view;
-            CREATE VIEW vlogice_view AS
-            SELECT zaposleni.uporabnisko_ime, zaposleni.geslo, zaposleni.trr, vloge.vloga
+            SELECT vloge.vloga, zaposleni.uporabnisko_ime, zaposleni.geslo, zaposleni.trr
             FROM zaposleni
-            LEFT JOIN vloge ON zaposleni.trr = vloge.trr;
-            SELECT vlogice_view.vloga FROM vlogice_view WHERE vlogice_view.uporabnisko_ime = %s;
+            LEFT JOIN vloge ON zaposleni.trr = vloge.trr
+            WHERE zaposleni.uporabnisko_ime = %s;
             """, (uporabnisko_ime,))
-        conn.commit()
         vloga_za_cookie = str(cur.fetchone()[0]) 
-        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
-        response.set_cookie("vloga",vloga_za_cookie)
+        response.set_cookie("uporabnisko_ime",uporabnisko_ime,path = "/")
+        response.set_cookie("vloga",vloga_za_cookie,path = "/")
         cur.execute("SELECT * FROM zaposleni")
-        conn.commit()
 #        print(request.get_cookie("uporabnisko_ime"))
 #        print(request.get_cookie("vloga"))
         return template("zaposleni.html",  zaposlene=cur,v=vloga_za_cookie,u=uporabnisko_ime)
