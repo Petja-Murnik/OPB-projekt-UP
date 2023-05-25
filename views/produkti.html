@@ -1,26 +1,29 @@
-%rebase('osnova.html', naslov='produkti (noro, drugic)')
-
-<a href="/" class="myButton" >Nazaj </a>
+% rebase('osnova.html', naslov='Produkti')
 
 <table cellpadding="0" cellspacing="0" border="1">
-    <tr>
-        <th>Id. produkta</th>
-        <th>Prodajna cena produkta</th>
-        <th>Nabavna cena produkta</th>
-        <th>Ime produkta</th>
-        
-     </tr>
-     %for (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) in produkti:
-     <tr>
-        <td>{{id_produkt}}</td>
-        <td>{{prodajna_cena}}</td>
-        <td>{{nabavna_cena}}</td>
-        <td>{{ime_produkt}}</td>
-     </tr>
-   %end    
-</table>
-
-
+   <tr>
+      <th>Id. produkta</th>
+      <th>Prodajna cena produkta</th>
+      <th>Nabavna cena produkta</th>
+      <th>Ime produkta</th>
+   </tr>
+   %for (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) in produkti:
+  <tr>
+     <td>{{id_produkt}}</td>
+     <td>{{prodajna_cena}}</td>
+     <td>{{nabavna_cena}}</td>
+     <td>{{ime_produkt}}</td>
+     <td class="myButton">
+       <form action="{{url('produkti_uredi', id_produkt=id_produkt)}}" method="GET">
+         <a href="/uredi_produkt" onclick="this.parentElement.submit()">Uredi</a>
+       </form>
+       <form action="{{url('produkti_brisi', id_produkt=id_produkt)}}" method="POST">
+         <a href="/produkti/" >Izbriši</a>
+       </form>
+     </td>
+   </tr>
+   %end
+ </table>
 %if True:
 
 <a href="/dodaj_produkt" class="myButton" >Dodaj produkt</a>
