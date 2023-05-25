@@ -41,7 +41,7 @@ def cookie_required_kupec(f):
         cookie = request.get_cookie("uporabnisko_ime")
         if cookie:
             return f(*args, **kwargs)
-        return template("zacetna.html")
+        return template("login.html")
 
     
         
@@ -50,14 +50,14 @@ def cookie_required_kupec(f):
 
 def cookie_required_zaposlen_uporabnisko_ime(f):
     """
-    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za prijavo.
+    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za .
     """
     @wraps(f)
     def decorated( *args, **kwargs):
         cookie = request.get_cookie("uporabnisko_ime")
         if cookie:
             return f(*args, **kwargs)
-        return template("zacetna.html")
+        return template("prijava_zaposleni.html",uporabnisko_ime = "", geslo = "",napaka2  = None)
 
     
         
@@ -73,7 +73,7 @@ def cookie_required_zaposlen_vloga(f):
         cookie = request.get_cookie("vloga")
         if cookie:
             return f(*args, **kwargs)
-        return template("zacetna.html")
+        return template("prijava_zaposleni.html",uporabnisko_ime = "", geslo = "",napaka2  = None)
 
     
         
@@ -96,7 +96,7 @@ def index():
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
 def zaposleni_get():
-    vlogica= request.get_cookie("vloga",secret="skrivnost")
+    vlogica= request.get_cookie("vloga")
     uporabniski_imencek = request.get_cookie("uporabnisko_ime")
     cur.execute("SELECT * FROM zaposleni")
     print(vlogica)
@@ -378,11 +378,11 @@ def prijava_zaposleni_post():
         conn.commit()
         vloga_za_cookie = str(cur.fetchone()[0]) 
         response.set_cookie("uporabnisko_ime",uporabnisko_ime)
-        response.set_cookie("vloga",vloga_za_cookie, secret="skrivnost")
+        response.set_cookie("vloga",vloga_za_cookie)
         cur.execute("SELECT * FROM zaposleni")
         conn.commit()
-        print(request.get_cookie("uporabnisko_ime"))
-        print(request.get_cookie("vloga",secret="skrivnost"))
+#        print(request.get_cookie("uporabnisko_ime"))
+#        print(request.get_cookie("vloga"))
         return template("zaposleni.html",  zaposlene=cur,v=vloga_za_cookie,u=uporabnisko_ime)
         #return print(request.get_cookie("uporabnisko_ime"))        
     else:
