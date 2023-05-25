@@ -208,18 +208,19 @@ def odjava():
     return template('prijava.html', napaka=None)
 
 #to dostopata samo admin in vodje, treba dat piškotk še
+
+# PRODUKTI
 @get("/produkti/")
 def produkti_get():
     cur.execute("SELECT * from produkti")
     return template("produkti.html", produkti=cur)
 
-@get("/dodaj_produkt")
-def dodaj_produkt_get():
-    return template("dodaj_produkt.html",
-                    id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= None)
+@get("/produkti/dodaj")
+def produkti_dodaj():
+    return template("uredi_produkt.html")
 
-@post('/dodaj_produkt')
-def dodaj_produkt_post():
+@post('/uredi_produkt')
+def uredi_produkt_post():
     if False:
         "pri produktih je nekaj narobe"
     else:
@@ -235,8 +236,72 @@ def dodaj_produkt_post():
         conn.commit()
     except Exception as ex:
         conn.rollback()
-        return template('dodaj_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
+        return template('uredi_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("produkti_get"))
+
+
+@post("/produkti/dodaj")
+def produkti_dodaj_post():
+    if False:
+        "pri produktih je nekaj narobe"
+    else:
+        id_produkt = int(request.forms.get('id_produkt'))
+        prodajna_cena = int(request.forms.get('prodajna_cena'))
+        nabavna_cena = int(request.forms.get('nabavna_cena'))
+        ime_produkt = str(request.forms.get('ime_produkt'))
+    try: 
+        cur.execute("""INSERT INTO produkti 
+            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) 
+            VALUES (?, ?, ?, ?)""",
+            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
+        conn.commit()
+    except Exception as ex:
+        conn.rollback()
+        print("Zgodila se je napaka")
+    redirect(url("produkti_get"))
+
+@get("/produkti/uredi/<id_produkt>")
+def produkti_uredi(cur, id_produkt):
+    cur.execute("""
+        SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = ?
+    """, (id_produkt, ))
+    res = cur.fetchone()
+    if res is None:
+        #nastavi_sporocilo(f"Produkti {id_produkt} ne obstaja!")
+        redirect(url('produkti'))
+    id_produkt, prodajna_cena, nabavna_cena, ime_produkt = res
+    return template("uredi_produkt.html", id_produkt=id_produkt, prodajna_cena=prodajna_cena, nabavna_cena=nabavna_cena, ime_produkt=ime_produkt)
+
+
+@post("/produkti/uredi/<id_produkt>")
+def produkti_uredi_post(cur, id_produkt):
+    nov_id_produkt = int(request.forms.get('id_produkt'))
+    prodajna_cena = int(request.forms.get('prodajna_cena'))
+    nabavna_cena = int(request.forms.get('nabavna_cena'))
+    ime_produkt = str(request.forms.get('ime_produkt'))
+    try:
+        cur.execute("""UPDATE produkti
+            SET id_produkt = %s, prodajna_cena = %s, nabavna_cena = %s, ime_produkt = %s
+            WHERE id_produkt = %s;
+            """,(nov_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt))
+        conn.commit()
+    except:
+        #nastavi_sporocilo(f"Urejanje produkta {id_produkt} ni uspelo.")
+        redirect(url('uredi_produkt.html', id_produkt=id_produkt))
+    redirect(url('produkti'))
+
+@post("/produkti/brisi/<id_produkt>")
+def produkti_brisi(cur, id_produkt):
+    cur.execute("""
+        DELETE FROM produkti WHERE id_produkt = ?;
+        """, (id_produkt ))
+        
+# stara metoda - zdej samo za dodajanje 
+@get("/dodaj_produkt")
+def dodaj_produkt_get():
+    return template("uredi_produkt.html",
+                    id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= None)
+
 
 
 
