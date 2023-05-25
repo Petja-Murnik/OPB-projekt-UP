@@ -3,6 +3,12 @@
 
 <a href="/" class="myButton" >Nazaj </a>
 
+%if v == "delavec":
+<p>TI PA TO NE SMEŠ</p>
+%else:
+
+
+
 <table cellpadding="0" cellspacing="0" border="1">
     <tr>
         <th>Ime</th>
@@ -29,8 +35,7 @@
      </tr>
    %end    
 </table>
+%end
 
-
-%if True:
 
 <a href="/dodaj_zaposlenega" class="myButton" >Dodaj zaposlenega</a>

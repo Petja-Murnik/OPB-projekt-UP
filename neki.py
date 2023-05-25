@@ -3,7 +3,10 @@
 
 # uvozimo bottle.py
 from bottleext import get, post, run, request, template, redirect, static_file, url
+from bottle import response
 
+#za cookieje
+from functools import wraps
 # uvozimo ustrezne podatke za povezavo
 from uvoz import auth_public as auth
 
@@ -26,7 +29,59 @@ cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
 
 #za debugiranje
-#debuger(True)
+#debug(True)
+
+#POMOŽNA KODA ZA COOKIE##################################################
+def cookie_required_kupec(f):
+    """
+    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za prijavo.
+    """
+    @wraps(f)
+    def decorated( *args, **kwargs):
+        cookie = request.get_cookie("uporabnisko_ime")
+        if cookie:
+            return f(*args, **kwargs)
+        return template("zacetna.html")
+
+    
+        
+        
+    return decorated
+
+def cookie_required_zaposlen_uporabnisko_ime(f):
+    """
+    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za prijavo.
+    """
+    @wraps(f)
+    def decorated( *args, **kwargs):
+        cookie = request.get_cookie("uporabnisko_ime")
+        if cookie:
+            return f(*args, **kwargs)
+        return template("zacetna.html")
+
+    
+        
+        
+    return decorated
+
+def cookie_required_zaposlen_vloga(f):
+    """
+    Dekorator, ki zahteva veljaven piškotek. Če piškotka ni, uporabnika preusmeri na stran za prijavo.
+    """
+    @wraps(f)
+    def decorated( *args, **kwargs):
+        cookie = request.get_cookie("vloga")
+        if cookie:
+            return f(*args, **kwargs)
+        return template("zacetna.html")
+
+    
+        
+        
+    return decorated
+
+#######################################################################################################KONEC COOKIE
+
 
 @get('/static/<filename:path>')
 def static(filename):
@@ -36,11 +91,16 @@ def static(filename):
 def index():
     return template('zacetna.html', osebe = cur)
 
-###################
+##################ZAPOSLINI
 @get("/zaposleni/")
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def zaposleni_get():
+    vlogica= request.get_cookie("vloga",secret="skrivnost")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
     cur.execute("SELECT * FROM zaposleni")
-    return template("zaposleni.html",  zaposlene=cur)
+    print(vlogica)
+    return template("zaposleni.html",  zaposlene=cur,v=vlogica,u = uporabniski_imencek )
 
 @get("/dodaj_zaposlenega")
 def dodaj_zaposlenega_get():
@@ -101,17 +161,21 @@ def place():
     return template("place.html",place = results)
 
 @get("/spremeni_placo")
-#cookie required ?
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def spremeni_placo_get():
     return template("spremeni_placo.html", trr = "",nova_placa = "", napaka= None)
 
 
 @post("/spremeni_placo")
-#@cookie required ? 
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga 
 def spremeni_placo_post():
-    if False:
-        "TI sment pa tega ne smes"
+    moja_vloga= request.get_cookie("vloga",secret="skrivnost")
+    if moja_vloga == "delavec":
+        print("TI pa ne smes HAHA")
     else:
+        print(moja_vloga)
         trr = request.forms.get("TRR")
         nova_placa = request.forms.get("Nova placa")
     try:
@@ -142,24 +206,58 @@ def hashGesla(s):
     return m.hexdigest()
 
 
-@get('/registracija/')
-def registracija_get():
-    napaka = None
-    return template('register.html', napaka=napaka)
+# @get('/registracija/')
+# def registracija_get():
+#     napaka = None
+#     return template('register.html', napaka=napaka)
 
-@post('/registracija/')
-def registracija_post():
-    ime = request.forms.get('Ime')
-    priimek = request.forms.get('Priimek')
-    mesto = request.forms.get('Mesto')
-    naslov = request.forms.get('Naslov')
-    trr = request.forms.get('TRR')
-    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-    geslo = request.forms.get('Geslo')
-    placa = request.forms.get('Placa')
-    st_ur = request.forms.get('Stevilo_ur')
-    vloga = request.forms.get('Vloga')
-    oddelek = request.forms.get('Oddelek')
+# @post('/registracija/')
+# def registracija_post():
+    
+#     ime = request.forms.get('Ime')
+#     priimek = request.forms.get('Priimek')
+#     mesto = request.forms.get('Mesto')
+#     naslov = request.forms.get('Naslov')
+#     trr = request.forms.get('TRR')
+#     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+#     geslo = request.forms.get('Geslo')
+#     placa = request.forms.get('Placa')
+#     st_ur = request.forms.get('Stevilo_ur')
+#     vloga = request.forms.get('Vloga')
+#     oddelek = request.forms.get('Oddelek')
+
+#     uporabnik1 =
+@get("/dodaj_kupec")
+def dodaj_kupec_get():
+    return template("register.html",
+                    ime = "",priimek = '',mesto = '',naslov = '',trr = "", uporabnisko_ime ='', geslo ='',napaka= None)
+
+@post('/dodaj_kupec')
+def dodaj_kupec_post():
+    if False:
+        "ti sment ne smes redirect"
+    else:
+        ime = request.forms.get('Ime')
+        priimek = request.forms.get('Priimek')
+        naslov = request.forms.get('Naslov')
+        mesto = request.forms.get('Mesto')
+        trr = request.forms.get('TRR')
+        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+        geslo = request.forms.get('Geslo')
+    try: 
+        cur.execute("""INSERT INTO kupci 
+            (ime, priimek, naslov, mesto,trr,uporabnisko_ime,
+             geslo) 
+            VALUES(%s, %s,%s,%s,%s,%s,%s)""",
+            (ime, priimek, mesto, naslov,trr,uporabnisko_ime,
+             geslo))
+        conn.commit()
+    except Exception as ex:
+        conn.rollback()
+        return template('register.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
+                         uporabnisko_ime ='', geslo ='',napaka= 'Zgodila se je napaka: %s' % ex)
+    redirect(url("/"))
+
 
 @get("/petja/")
 def petja_get():
@@ -190,10 +288,15 @@ def prijava_post():
     if geslo != hashBaza:
         return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if geslo == hashBaza:
-        return print("bravo pravo geslo")
+        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
+        cur.execute("SELECT * FROM zaposleni")
+        #return template("zaposleni.html",  zaposlene=cur)
+        #return print(request.get_cookie("uporabnisko_ime"))     
     else:
         return print("tu te ni")
+    
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
+
 
 
 @get('/odjava')
@@ -239,7 +342,62 @@ def uredi_produkt_post():
         return template('uredi_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("produkti_get"))
 
+#PRIJAVA zaposleni
+@get('/prijava_zaposleni/') 
+def prijava_zaposleni_get():
+    return template("prijava_zaposleni.html", uporabnisko_ime = "", geslo = "",napaka2  = None)
 
+@post('/prijava_zaposleni/')
+def prijava_zaposleni_post():
+    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+    geslo = request.forms.get('Geslo')
+    if uporabnisko_ime is None or geslo is None:
+        redirect(url(''))      
+    oseba = cur   
+    hashBaza = None
+    try: 
+        hashBaza = cur.execute("SELECT geslo FROM zaposleni WHERE uporabnisko_ime = %s", [uporabnisko_ime])
+        hashBaza = cur.fetchone()
+        hashBaza = hashBaza[0]
+        print("AA")
+    except:
+        hashBaza = None 
+        print("BBB")
+    if hashBaza is None:
+        return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo != hashBaza:
+        return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo == hashBaza:
+        cur.execute("""
+            DROP VIEW IF EXISTS vlogice_view;
+            CREATE VIEW vlogice_view AS
+            SELECT zaposleni.uporabnisko_ime, zaposleni.geslo, zaposleni.trr, vloge.vloga
+            FROM zaposleni
+            LEFT JOIN vloge ON zaposleni.trr = vloge.trr;
+            SELECT vlogice_view.vloga FROM vlogice_view WHERE vlogice_view.uporabnisko_ime = %s;
+            """, (uporabnisko_ime,))
+        conn.commit()
+        vloga_za_cookie = str(cur.fetchone()[0]) 
+        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
+        response.set_cookie("vloga",vloga_za_cookie, secret="skrivnost")
+        cur.execute("SELECT * FROM zaposleni")
+        conn.commit()
+        print(request.get_cookie("uporabnisko_ime"))
+        print(request.get_cookie("vloga",secret="skrivnost"))
+        return template("zaposleni.html",  zaposlene=cur,v=vloga_za_cookie,u=uporabnisko_ime)
+        #return print(request.get_cookie("uporabnisko_ime"))        
+    else:
+        return print("tu te ni")
+    redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
+
+###############KOŠARICA IN NJENA VSEBINA################################
+def vsebina_kosare():
+    """Funkcija za pridobivanje vsebine košarice kot množice."""
+    kosara = request.get_cookie('kosara')#, secret=secret)
+
+    if kosara is None:
+        return set()
+    
 @post("/produkti/dodaj")
 def produkti_dodaj_post():
     if False:
@@ -304,8 +462,27 @@ def dodaj_produkt_get():
 
 
 
+@get('/kosarica/')
+def kosara():
+    uporabnisko_ime = uporabnisko_ime()
+    kosara = vsebina_kosare()
+    izdelki = []
 
-#KODE ZA KOŠARICO, SEZNAM KUPLJENIH STVARI...
+    if len(kosara) == 0:
+        napaka = 'Vaša košarica je prazna.'
+        izrisi = False
+    else:
+        napaka = None
+        cur.execute("SELECT * FROM produkti WHERE id_produkt IN ({})".format(", ".join("%s" for _ in kosara)), tuple(kosara))
+        izdelki = cur.fetchall()
+    return template("kosarica.html")
+
+@post('/dodaj_v_kosaro/:x/')
+def dodaj_v_kosaro(x):
+    kosara = vsebina_kosare()
+    kosara.symmetric_difference_update({x})  # doda v košaro, če ga še ni, sicer ga odstrani
+    response.set_cookie('kosara')#, json.dumps(list(kosara)), path='/', secret=secret)
+    redirect("/izdelek/{}/".format(x))
 
 
 
