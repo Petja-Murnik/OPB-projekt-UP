@@ -1,0 +1,17 @@
+%rebase('osnova.html', naslov='shoping')
+
+
+<table cellpadding="0" cellspacing="0" border="1">
+    <tr>
+        <th>Prodajna cena produkta</th>
+        <th>Ime produkta</th>
+        
+     </tr>
+     %for (prodajna_cena,ime_produkt) in produkti:
+     <tr>
+        <td>{{prodajna_cena}}</td>
+        <td>{{ime_produkt}}</td>
+     </tr>
+   %end    
+</table>
+
