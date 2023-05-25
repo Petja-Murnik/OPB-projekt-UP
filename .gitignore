@@ -129,6 +129,3 @@ dmypy.json
 .pyre/
 
 
-auth_public.py
-
-uvoz/auth_public.py
