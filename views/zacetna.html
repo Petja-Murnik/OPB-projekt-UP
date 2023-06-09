@@ -1,13 +1,108 @@
 %rebase('osnova.html', naslov='Petika')
+<html>
+<head>
+<title>CSS Template</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+  background-image: url('ozadje.jpg');
+  background-repeat: no-repeat;
+  background-attachment: fixed;  
+  background-size: cover;
+}
+* {
+  box-sizing: border-box;
+}
 
-    <b>Helo world </b>
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
 
-    <p><a href="/zaposleni/">HTML Images</a></p>
-    <p><a href="/prijava/">prijava</a></p>
-    <p><a href="/produkti/">produkti</a></p>
-    <p><a href="/prijava_zaposleni/">Prjava zaposleni</a></p>
-    <p><a href="/kosarica/">Moja košarica</a></p>
-    <p><a href="/dodaj_v_kosaro/">Izbira produktov</a></p>
+/* Style the header */
+header {
+  background-color: #b49860;
+  padding: 30px;
+  text-align: center;
+  font-size: 35px;
+  color: rgb(100, 43, 43);
+}
 
+/* Create two columns/boxes that floats next to each other */
+nav {
+  float: left;
+  width: 30%;
+  height: 300px; /* only for demonstration, should be removed */
+  background: #ccc;
+  padding: 20px;
+}
 
-    $
+/* Style the list inside the menu */
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+article {
+  float: left;
+  padding: 20px;
+  width: 70%;
+  background-color: #f1f1f1;
+  height: 300px; /* only for demonstration, should be removed */
+}
+
+/* Clear floats after the columns */
+section::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* Style the footer */
+footer {
+  background-color: #b49860;
+  padding: 10px;
+  text-align: center;
+  color: rgb(100, 43, 43);
+}
+
+/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
+@media (max-width: 600px) {
+  nav, article {
+    width: 100%;
+    height: auto;
+  }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h2>Petika</h2>
+</header>
+
+<section>
+  <nav>
+    <ul>
+      <li><a href="/zaposleni/">Zaposleni</a></li>
+      <li><a href="/prijava/">Prijava</a></li>
+      <li><a href="/produkti/">Produkti</a></li>
+      <li><a href="/prijava_zaposleni">Prijava zaposleni</a></li>
+      <li><a href="/kosarica/">Košarica</a></li>
+      <li><a href="/dodaj_v_kosaro/">Dodaj v košaro</a></li>
+    </ul>
+  </nav>
+  
+  <article>
+    <p>Opišemo trgovino Petika kaj ponujamo ipd</p>
+  </article>
+</section>
+
+<footer>
+  <p>O nas kontakti</p>
+</footer>
+
+</body>
+</html>
+
+$
