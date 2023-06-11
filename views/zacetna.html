@@ -5,6 +5,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
+    .button {
+  display: inline-block;
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #ea987f;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:hover {background-color: #999}
+
+.button:active {
+  background-color: #999;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
     body {
   background-image: url('ozadje.jpg');
   background-repeat: no-repeat;
@@ -84,17 +106,22 @@ footer {
 <section>
   <nav>
     <ul>
-      <li><a href="/zaposleni/">Zaposleni</a></li>
+      <li><a href="/zaposleni/">Prijava zaposleni</a></li>
       <li><a href="/prijava/">Prijava</a></li>
-      <li><a href="/produkti/">Produkti</a></li>
-      <li><a href="/prijava_zaposleni">Prijava zaposleni</a></li>
-      <li><a href="/kosarica/">Košarica</a></li>
-      <li><a href="/dodaj_v_kosaro/">Dodaj v košaro</a></li>
+      
     </ul>
   </nav>
   
+
+
   <article>
     <p>Opišemo trgovino Petika kaj ponujamo ipd</p>
+    <a href="/produkti/" class="button" >Produkti</a>
+    <a href="/kosarica/" class="button" >Košarica</a>
+    <a href="/dodaj_v_kosaro/" class="button" >Dodaj v košaro</a>
+
+
+
   </article>
 </section>
 
