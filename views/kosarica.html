@@ -1,4 +1,12 @@
 %rebase('osnova.html', naslov='Košarica')
 
 <h1>Moja košarica</h1>
-<form action="{{url('/kosarica/_get')}}" method="POST"></form>
+<form action="{{url('/kosarica/')}}" method="POST">
+    <label for="ime_produkt">Ime produkta:</label>
+    <input type="text" name="ime_produkt" id="ime_produkt">
+    <br>
+    <label for="kolicina">Količina:</label>
+    <input type="number" name="kolicina" id="kolicina">
+    <br>
+    <input type="submit" value="Dodaj u košaricu">
+</form>

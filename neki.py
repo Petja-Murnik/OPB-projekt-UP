@@ -387,10 +387,6 @@ def prijava_zaposleni_post():
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 ###############KOŠARICA IN NJENA VSEBINA################################
-@get('/dodaj_v_kosaro/')
-def dodaj_v_kosaro_get():
-    cur.execute("SELECT prodajna_cena, ime_produkt  FROM produkti")
-    return template("dodaj_v_kosaro.html", dodaj_v_kosaro=cur)
 
 # @post('/dodaj_v_kosaro/')
 # def dodaj_post():
@@ -401,14 +397,6 @@ def dodaj_v_kosaro_get():
 #         ime_produkt = str(request.forms.get('ime_produkt'))
 #     redirect(url('dodaj_get'))
 
-
-
-def vsebina_kosare():
-    """Funkcija za pridobivanje vsebine košarice kot množice."""
-    kosara = request.get_cookie('kosara')#, secret=secret)
-
-    if kosara is None:
-        return set()
     
 @post("/produkti/dodaj")
 def produkti_dodaj_post():
@@ -474,19 +462,21 @@ def dodaj_produkt_get():
 
 
 
+
+
+#potrbujemo nakupuj-sesznam vseh izdelkov klikneš nanga in da v košarico.
+@get("/nakupuj/")
+def nakupuj_get():
+    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
+    rows = cur.fetchall()
+    return template("nakupuj.html", produkti=rows)
+
 @get('/kosarica/')
 def kosara():
-    uporabnisko_ime = uporabnisko_ime()
-    kosara = vsebina_kosare()
-    izdelki = []
+    ime_produkt = request.query.get('ime_produkt')
 
-    if len(kosara) == 0:
-        napaka = 'Vaša košarica je prazna.'
-        izrisi = False
-    else:
-        napaka = None
-        cur.execute("SELECT * FROM produkti WHERE id_produkt IN ({})".format(", ".join("%s" for _ in kosara)), tuple(kosara))
-        izdelki = cur.fetchall()
+    cur.execute("CREATE TABLE IF NOT EXISTS kosara (ime_produkt TEXT, cena INTEGER)")
+    cur.execute("INSERT INTO kosara (ime_produkt, cena) SELECT ime_produkt, prodajna_cena FROM produkti WHERE ime_produkt=?", (ime_produkt,))
     return template("kosarica.html")
 
 

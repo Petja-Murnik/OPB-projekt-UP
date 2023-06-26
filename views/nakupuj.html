@@ -11,7 +11,15 @@
      <tr>
         <td>{{prodajna_cena}}</td>
         <td>{{ime_produkt}}</td>
+        <td class="myButton">
+         <form>
+            <a href="/nakupuj_dodaj" onclick="this.parentElement.submit()">Dodaj v košarico</a>
+          </form>
+         </td>
+
+
      </tr>
    %end    
 </table>
-
+%if True:
+<a href="/nakupuj/">Nakupuj</a>
