@@ -199,7 +199,7 @@ def spremeni_placo_post():
 
 
 
-#OSNUTEK KODE ZA PRIJAVO IN REGISTRACIJO
+
 def hashGesla(s):
     m = hashlib.sha256()
     m.update(s.encode("utf-8"))
@@ -259,60 +259,8 @@ def dodaj_kupec_post():
     redirect(url("/"))
 
 
-@get("/petja/")
-def petja_get():
-    return "šalal"
 
-@get('/prijava/') 
-def prijava_get():
-    return template("login.html", uporabnisko_ime = "", geslo = "",napaka2  = None)
-
-@post('/prijava/')
-def prijava_post():
-    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-    geslo = request.forms.get('Geslo')
-    if uporabnisko_ime is None or geslo is None:
-        redirect(url(''))      
-    oseba = cur   
-    hashBaza = None
-    try: 
-        hashBaza = cur.execute("SELECT geslo FROM kupci WHERE uporabnisko_ime = %s", [uporabnisko_ime])
-        hashBaza = cur.fetchone()
-        hashBaza = hashBaza[0]
-        print("AA")
-    except:
-        hashBaza = None 
-        print("BBB")
-    if hashBaza is None:
-        return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
-    if geslo != hashBaza:
-        return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
-    if geslo == hashBaza:
-        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
-        cur.execute("SELECT * FROM zaposleni")
-        #return template("zaposleni.html",  zaposlene=cur)
-        #return print(request.get_cookie("uporabnisko_ime"))     
-    else:
-        return print("tu te ni")
-    
-    redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
-
-
-
-@get('/odjava')
-def odjava():
-    """
-    Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
-    """
-    
-    response.delete_cookie("uporabnik")
-    response.delete_cookie("rola")
-    
-    return template('prijava.html', napaka=None)
-
-#to dostopata samo admin in vodje, treba dat piškotk še
-
-# PRODUKTI
+########################################################### PRODUKTI
 @get("/produkti/")
 def produkti_get():
     cur.execute("SELECT * from produkti")
@@ -342,7 +290,7 @@ def uredi_produkt_post():
         return template('uredi_produkt.html',id_produkt = "",prodajna_cena = '',nabavna_cena = '',ime_produkt = '', napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("produkti_get"))
 
-#PRIJAVA zaposleni
+###################################################PRIJAVA zaposleni
 @get('/prijava_zaposleni/') 
 def prijava_zaposleni_get():
     return template("prijava_zaposleni.html", uporabnisko_ime = "", geslo = "",napaka2  = None)
@@ -366,7 +314,7 @@ def prijava_zaposleni_post():
     if hashBaza is None:
         return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if geslo != hashBaza:
-        return print("sedaj si pa tu")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return print("sedaj si pa tu")#print(#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if geslo == hashBaza:
         cur.execute("""
             SELECT vloge.vloga, zaposleni.uporabnisko_ime, zaposleni.geslo, zaposleni.trr
@@ -385,6 +333,59 @@ def prijava_zaposleni_post():
     else:
         return print("tu te ni")
     redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
+
+#OSNUTEK KODE ZA PRIJAVO IN REGISTRACIJO
+
+@get('/prijava/') 
+def prijava_get():
+    return template("login.html", uporabnisko_ime = "", geslo = "",napaka2  = None)
+
+@post('/prijava/')
+def prijava_post():
+    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+    geslo = request.forms.get('Geslo')
+    if uporabnisko_ime is None or geslo is None:
+        redirect(url(''))      
+    oseba = cur   
+    hashBaza = None
+    try: 
+        hashBaza = cur.execute("SELECT geslo FROM kupci WHERE uporabnisko_ime = %s", [uporabnisko_ime])
+        hashBaza = cur.fetchone()
+        hashBaza = hashBaza[0]
+        print("AA")
+    except:
+        hashBaza = None 
+        print("BBB")
+    if hashBaza is None:
+        return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo != hashBaza:
+        print(hashBaza)
+        print(geslo)#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+    if geslo == hashBaza:
+        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
+        cur.execute("SELECT * FROM zaposleni")
+        return template("zacetna.html",  zaposlene=cur)
+        #return print(request.get_cookie("uporabnisko_ime"))     
+    else:
+        return print("tu te ni")
+    
+    #redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
+
+
+
+@get('/odjava')
+def odjava():
+    """
+    Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
+    """
+    
+    response.delete_cookie("uporabnik")
+    response.delete_cookie("rola")
+    
+    return template('prijava.html', napaka=None)
+
+#to dostopata samo admin in vodje, treba dat piškotk še
+
 
 ###############KOŠARICA IN NJENA VSEBINA################################
 @get('/dodaj_v_kosaro/')
