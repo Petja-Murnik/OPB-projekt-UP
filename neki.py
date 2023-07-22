@@ -206,57 +206,7 @@ def hashGesla(s):
     return m.hexdigest()
 
 
-# @get('/registracija/')
-# def registracija_get():
-#     napaka = None
-#     return template('register.html', napaka=napaka)
 
-# @post('/registracija/')
-# def registracija_post():
-    
-#     ime = request.forms.get('Ime')
-#     priimek = request.forms.get('Priimek')
-#     mesto = request.forms.get('Mesto')
-#     naslov = request.forms.get('Naslov')
-#     trr = request.forms.get('TRR')
-#     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-#     geslo = request.forms.get('Geslo')
-#     placa = request.forms.get('Placa')
-#     st_ur = request.forms.get('Stevilo_ur')
-#     vloga = request.forms.get('Vloga')
-#     oddelek = request.forms.get('Oddelek')
-
-#     uporabnik1 =
-@get("/dodaj_kupec")
-def dodaj_kupec_get():
-    return template("register.html",
-                    ime = "",priimek = '',mesto = '',naslov = '',trr = "", uporabnisko_ime ='', geslo ='',napaka= None)
-
-@post('/dodaj_kupec')
-def dodaj_kupec_post():
-    if False:
-        "ti sment ne smes redirect"
-    else:
-        ime = request.forms.get('Ime')
-        priimek = request.forms.get('Priimek')
-        naslov = request.forms.get('Naslov')
-        mesto = request.forms.get('Mesto')
-        trr = request.forms.get('TRR')
-        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-        geslo = request.forms.get('Geslo')
-    try: 
-        cur.execute("""INSERT INTO kupci 
-            (ime, priimek, naslov, mesto,trr,uporabnisko_ime,
-             geslo) 
-            VALUES(%s, %s,%s,%s,%s,%s,%s)""",
-            (ime, priimek, mesto, naslov,trr,uporabnisko_ime,
-             geslo))
-        conn.commit()
-    except Exception as ex:
-        conn.rollback()
-        return template('register.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
-                         uporabnisko_ime ='', geslo ='',napaka= 'Zgodila se je napaka: %s' % ex)
-    redirect(url("/"))
 
 
 
@@ -372,37 +322,37 @@ def prijava_post():
     
     #redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
-# @get('/registracija/')
-# def registracija_get():
-#     #return template("registracija.html", uporabnisko_ime = "", geslo1 = "", geslo2 = "",ime = "",priimek = "",naslov = "",trr = "",mesto = "", napaka = None )
 
 
+@get('/registracija/')
+def registracija_get():
+    return template("registracija.html", uporabnisko_ime = "", geslo1 = "", geslo2 = "",ime = "",priimek = "",naslov = "",trr = "",mesto = "", napaka = None )
 
-# @post("/registracija/")
-# def registracija_post():
-#     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-#     geslo1 = request.forms.get('Geslo1')
-#     geslo2 = request.forms.get('Geslo2')
-#     ime = request.forms.get('Ime')
-#     priimek = request.forms.get('Priimek')
-#     naslov = request.forms.get('Naslov')
-#     trr = request.forms.get('TRR')
-#     mesto = request.forms.get("Mesto")
-#     cur.execute("SELECT * FROM kupci WHERE uporabnisko_ime = %s", [uporabnisko_ime])
-#     if cur.fetchone():
-#         print('ime že zasedeno')
-#         # return template("registracija.html", uporabnisko_ime="", geslo1="", geslo2="", napaka='To uporabniško ime je že zasedeno.')
-#     elif not geslo1 == geslo2:
-#         print('gesli se ne ujemata')
-#         # Geslo se ne ujemata
-#         # return template("registracija.html",  uporabnisko_ime="", geslo1="", geslo2="", napaka='Gesli se ne ujemata.')    
-#     else:
-#         cur.execute("INSERT INTO kupci (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-#                     (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo1))
-#         conn.commit()
-#         response.set_cookie("uporabnisko_ime", uporabnisko_ime)
-#         print("juhuhu")
-    #neki   
+
+@post('/registracija/')
+def registracija_post():
+    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+    geslo1 = request.forms.get('Geslo1')
+    geslo2 = request.forms.get('Geslo2')
+    ime = request.forms.get('Ime')
+    priimek = request.forms.get('Priimek')
+    naslov = request.forms.get('Naslov')
+    trr = request.forms.get('TRR')
+    mesto = request.forms.get("Mesto")
+    cur.execute("SELECT * FROM kupci WHERE uporabnisko_ime = %s", [uporabnisko_ime])
+    if cur.fetchone():
+        print('ime že zasedeno')
+        # return template("registracija.html", uporabnisko_ime="", geslo1="", geslo2="", napaka='To uporabniško ime je že zasedeno.')
+    elif not geslo1 == geslo2:
+        print('gesli se ne ujemata')
+        # Geslo se ne ujemata
+        # return template("registracija.html",  uporabnisko_ime="", geslo1="", geslo2="", napaka='Gesli se ne ujemata.')    
+    else:
+        cur.execute("INSERT INTO kupci (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+                    (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo1))
+        conn.commit()
+        response.set_cookie("uporabnisko_ime", uporabnisko_ime)
+        print("juhuhu")#neki   
 
         
 
