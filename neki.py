@@ -356,6 +356,7 @@ def prijava_post():
     except:
         hashBaza = None 
         print("BBB")
+        #redirect na login
     if hashBaza is None:
         return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if geslo != hashBaza:
@@ -371,20 +372,52 @@ def prijava_post():
     
     #redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
+# @get('/registracija/')
+# def registracija_get():
+#     #return template("registracija.html", uporabnisko_ime = "", geslo1 = "", geslo2 = "",ime = "",priimek = "",naslov = "",trr = "",mesto = "", napaka = None )
 
 
-@get('/odjava')
-def odjava():
-    """
-    Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
-    """
+
+# @post("/registracija/")
+# def registracija_post():
+#     uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+#     geslo1 = request.forms.get('Geslo1')
+#     geslo2 = request.forms.get('Geslo2')
+#     ime = request.forms.get('Ime')
+#     priimek = request.forms.get('Priimek')
+#     naslov = request.forms.get('Naslov')
+#     trr = request.forms.get('TRR')
+#     mesto = request.forms.get("Mesto")
+#     cur.execute("SELECT * FROM kupci WHERE uporabnisko_ime = %s", [uporabnisko_ime])
+#     if cur.fetchone():
+#         print('ime že zasedeno')
+#         # return template("registracija.html", uporabnisko_ime="", geslo1="", geslo2="", napaka='To uporabniško ime je že zasedeno.')
+#     elif not geslo1 == geslo2:
+#         print('gesli se ne ujemata')
+#         # Geslo se ne ujemata
+#         # return template("registracija.html",  uporabnisko_ime="", geslo1="", geslo2="", napaka='Gesli se ne ujemata.')    
+#     else:
+#         cur.execute("INSERT INTO kupci (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+#                     (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo1))
+#         conn.commit()
+#         response.set_cookie("uporabnisko_ime", uporabnisko_ime)
+#         print("juhuhu")
+    #neki   
+
+        
+
+
+# @get('/odjava')
+# def odjava():
+#     """
+#     Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
+#     """
     
-    response.delete_cookie("uporabnik")
-    response.delete_cookie("rola")
+#     response.delete_cookie("uporabnik")
+#     response.delete_cookie("rola")
     
-    return template('prijava.html', napaka=None)
+#     return template('prijava.html', napaka=None)
 
-#to dostopata samo admin in vodje, treba dat piškotk še
 
 
 ###############KOŠARICA IN NJENA VSEBINA################################
@@ -399,25 +432,25 @@ def odjava():
 #     redirect(url('dodaj_get'))
 
     
-@post("/produkti/dodaj")
-def produkti_dodaj_post():
-    if False:
-        "pri produktih je nekaj narobe"
-    else:
-        id_produkt = int(request.forms.get('id_produkt'))
-        prodajna_cena = int(request.forms.get('prodajna_cena'))
-        nabavna_cena = int(request.forms.get('nabavna_cena'))
-        ime_produkt = str(request.forms.get('ime_produkt'))
-    try: 
-        cur.execute("""INSERT INTO produkti 
-            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) 
-            VALUES (?, ?, ?, ?)""",
-            (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
-        conn.commit()
-    except Exception as ex:
-        conn.rollback()
-        print("Zgodila se je napaka")
-    redirect(url("produkti_get"))
+# @post("/produkti/dodaj")
+# def produkti_dodaj_post():
+#     if False:
+#         "pri produktih je nekaj narobe"
+#     else:
+#         id_produkt = int(request.forms.get('id_produkt'))
+#         prodajna_cena = int(request.forms.get('prodajna_cena'))
+#         nabavna_cena = int(request.forms.get('nabavna_cena'))
+#         ime_produkt = str(request.forms.get('ime_produkt'))
+#     try: 
+#         cur.execute("""INSERT INTO produkti 
+#             (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) 
+#             VALUES (?, ?, ?, ?)""",
+#             (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
+#         conn.commit()
+#     except Exception as ex:
+#         conn.rollback()
+#         print("Zgodila se je napaka")
+#     redirect(url("produkti_get"))
 
 @get("/produkti/uredi/<id_produkt>")
 def produkti_uredi(cur, id_produkt):
