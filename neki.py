@@ -453,7 +453,47 @@ def dodaj_produkt_get():
 def nakupuj_get():
     cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
     rows = cur.fetchall()
-    return template("nakupuj.html", produkti=rows)
+    kosarica = request.get_cookie("kosarica")
+    if kosarica is None:
+        kosarica = {}
+    else:
+        kosarica = eval(kosarica)
+    return template("nakupuj.html", produkti=rows, kosarica=kosarica)
+
+@post("/dodaj_v_kosarico")
+def dodaj_v_kosarico():
+    kosarica = request.get_cookie("kosarica")
+    if kosarica is None:
+        kosarica = {}
+    else:
+        kosarica = eval(kosarica)
+    
+    prodajna_cena = request.forms.get('prodajna_cena')
+    ime_produkt = request.forms.get('ime_produkt')
+    kolicina = request.forms.get('kolicina')
+    kosarica[ime_produkt] = (prodajna_cena, kolicina)
+    kosarica_str = str(kosarica)
+    response.set_cookie("kosarica", value=kosarica_str)
+    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
+    rows = cur.fetchall()
+    return template("nakupuj.html", produkti=rows, kosarica=kosarica)
+
+@post("/odstrani_iz_kosarice")
+def odstrani_iz_kosarice():
+    kosarica = request.get_cookie("kosarica")
+    if kosarica is None:
+        kosarica = {}
+    else:
+        kosarica = eval(kosarica)
+    ime_prod = request.forms.get('ime_prod')
+    del kosarica[ime_prod]
+    kosarica_str = str(kosarica)
+    response.set_cookie("kosarica", value=kosarica_str)
+    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
+    rows = cur.fetchall()
+    return template("nakupuj.html", produkti=rows, kosarica=kosarica)
+
+
 
 @get('/kosarica/')
 def kosara():

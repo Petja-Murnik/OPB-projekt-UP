@@ -1,7 +1,22 @@
 %rebase('osnova.html', naslov='shoping')
 
+<style>
+   .table-container {
+     display: flex;
+     align-items: flex-start;
+   }
 
+   .table-container table:nth-child(1) {
+     flex-shrink: 0;
+   }
+
+   .table-container table:nth-child(2) {
+     flex-shrink: 1;
+   }
+ </style>
+ <div class="table-container">
 <table cellpadding="0" cellspacing="0" border="1">
+   <a href="/kosarica/">Košarica</a>
     <tr>
         <th>Prodajna cena produkta</th>
         <th>Ime produkta</th>
@@ -12,14 +27,42 @@
         <td>{{prodajna_cena}}</td>
         <td>{{ime_produkt}}</td>
         <td class="myButton">
-         <form>
-            <a href="/nakupuj_dodaj" onclick="this.parentElement.submit()">Dodaj v košarico</a>
+         <form action="{{url('dodaj_v_kosarico')}}" method="POST">
+            <input type="hidden" value="{{prodajna_cena}}" name="prodajna_cena">
+            <input type="hidden" value="{{ime_produkt}}" name="ime_produkt">
+            <input type="number" min="1" value="1" name="kolicina">
+            <button type="submit">Dodaj v košarico</button>
           </form>
          </td>
-
-
      </tr>
-   %end    
+
+   %end
 </table>
-%if True:
-<a href="/nakupuj/">Nakupuj</a>
+
+<table cellpadding="0" cellspacing="0" border="1">
+   <tr>
+      <th>Ime produkta</th>
+      <th>Prodajna cena produkta</th>
+      
+   </tr>
+   %sum = 0
+   %for ime_prod, value in kosarica.items():
+     <tr>
+      <td>{{ime_prod}}</td>
+      <td>{{value[0]}}</td>
+      <td>{{value[1]}}</td>
+      <td class="myButton">
+         <form action="{{url('odstrani_iz_kosarice')}}" method="POST">
+            <input type="hidden" value="{{ime_prod}}" name="ime_prod">
+            <button type="submit">Odstrani iz košarice</button>
+          </form>
+         </td>
+     </tr>
+     %sum = sum+int(value[0])*int(value[1])
+   %end
+   <tr>
+      <td>Vsota:</td>
+      <td>{{sum}}</td>
+   </tr>
+</table>
+</div>
