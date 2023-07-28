@@ -17,6 +17,9 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODE) # se znebimo prob
 import os
 import hashlib
 
+import pickle
+from datetime import date
+
 # privzete nastavitve
 SERVER_PORT = os.environ.get('BOTTLE_PORT', 8080)
 RELOADER = os.environ.get('BOTTLE_RELOADER', True)
@@ -215,6 +218,11 @@ def hashGesla(s):
 def produkti_get():
     cur.execute("SELECT * from produkti")
     return template("produkti.html", produkti=cur)
+
+@get("/prodani_produkti/")
+def produkti_get():
+    cur.execute("SELECT * from prodani_produkti")
+    return template("prodani_produkti.html", produkti=cur)
 
 @get("/produkti/dodaj")
 def produkti_dodaj():
@@ -485,30 +493,29 @@ def odstrani_iz_kosarice():
         kosarica = {}
     else:
         kosarica = eval(kosarica)
+
     ime_prod = request.forms.get('ime_prod')
     del kosarica[ime_prod]
     kosarica_str = str(kosarica)
+    print(kosarica_str)
     response.set_cookie("kosarica", value=kosarica_str)
     cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
     rows = cur.fetchall()
     return template("nakupuj.html", produkti=rows, kosarica=kosarica)
 
+@get("/zakljuci_nakup")
+def zakljuci_nakup():
+    kosarica = request.get_cookie("kosarica")
+    uporabnisko_ime = request.get_cookie("uporabnisko_ime")
+    if kosarica is None:
+        return template("nakup_zakljucen_napaka.html")
+    else:
+        kosarica = eval(kosarica)
 
-
-@get('/kosarica/')
-def kosara():
-    ime_produkt = request.query.get('ime_produkt')
-
-    cur.execute("CREATE TABLE IF NOT EXISTS kosara (ime_produkt TEXT, cena INTEGER)")
-    cur.execute("INSERT INTO kosara (ime_produkt, cena) SELECT ime_produkt, prodajna_cena FROM produkti WHERE ime_produkt=?", (ime_produkt,))
-    return template("kosarica.html")
-
-
-
-
-
-
-
+    for produkt in kosarica.items():
+        cur.execute(f"INSERT INTO prodani_produkti (cas_nakupa, uporabnisko_ime, produkt, cena, kolicina) VALUES ('{date.today()}', '{uporabnisko_ime}', '{produkt[0]}', '{(produkt[1])[0]}', '{(produkt[1])[1]}')")
+    
+    return template("nakup_zakljucen.html")
 
 #TO MORE BITI TUKAJ SPODAJ KODO PIŠI VIŠJE !!!
 # poženemo strežnik na podanih vratih, npr. http://localhost:8080/
