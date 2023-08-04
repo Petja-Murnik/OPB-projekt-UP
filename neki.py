@@ -149,12 +149,6 @@ def place():
         "TI baraba nesmes!"
     else:
         cur.execute("""
-            DROP VIEW IF EXISTS ime_priimek_placa;""")
-        conn.commit()
-        cur.execute("""
-            CREATE VIEW ime_priimek_placa AS 
-            SELECT ime || ' ' || priimek AS ime_priimek, placa 
-            FROM zaposleni;
             SELECT * FROM ime_priimek_placa;
             """)
         conn.commit()
@@ -286,11 +280,11 @@ def prijava_zaposleni_post():
         cur.execute("SELECT * FROM zaposleni")
 #        print(request.get_cookie("uporabnisko_ime"))
 #        print(request.get_cookie("vloga"))
-        return template("zaposleni.html",  zaposlene=cur,v=vloga_za_cookie,u=uporabnisko_ime)
+        return template("zacetna_zaposleni.html",  zaposlene=cur,v=vloga_za_cookie,u=uporabnisko_ime)
         #return print(request.get_cookie("uporabnisko_ime"))        
     else:
         return print("tu te ni")
-    redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
+    #redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 #OSNUTEK KODE ZA PRIJAVO IN REGISTRACIJO
 
