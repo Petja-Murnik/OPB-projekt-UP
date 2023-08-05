@@ -1,0 +1,43 @@
+%rebase('osnova.html', naslov='Komitenti banke')
+
+<a href="/" class="myButton" >Nazaj </a>
+
+<h2>Uredi zaposlenega</h2>
+    <form action="/uredi_zaposlenega/{{ trr }}" method="post">
+        <label for="Ime">Ime:</label>
+        <input type="text" name="Ime" value="{{ ime }}" required><br>
+
+        <label for="Priimek">Priimek:</label>
+        <input type="text" name="Priimek" value="{{ priimek }}" required><br>
+
+        <label for="Mesto">Mesto:</label>
+        <input type="text" name="Mesto" value="{{ mesto }}" required><br>
+
+        <label for="Naslov">Naslov:</label>
+        <input type="text" name="Naslov" value="{{ naslov }}" required><br>
+
+        <label for="Uporabnisko_ime">Uporabniško ime:</label>
+        <input type="text" name="Uporabnisko_ime" value="{{ uporabnisko_ime }}" required><br>
+
+        <label for="Geslo">Geslo:</label>
+        <input type="password" name="Geslo" value="{{ geslo }}" required><br>
+
+        <label for="Placa">Plača:</label>
+        <input type="number" name="Placa" value="{{ placa }}" required><br>
+
+        <label for="Stevilo_ur">Število ur:</label>
+        <input type="number" name="Stevilo_ur" value="{{ st_ur }}" required><br>
+
+        <label for="Vloga">Vloga:</label>
+        <input type="text" name="Vloga" value="{{ vloga }}"><br>
+
+        <label for="Oddelek">Oddelek:</label>
+        <input type="text" name="Oddelek" value="{{ oddelek }}"><br>
+
+        <input type="submit" value="Shrani spremembe">
+    </form>
+
+
+
+
+

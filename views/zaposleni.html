@@ -3,35 +3,35 @@
 
 <a href="/" class="myButton" >Nazaj </a>
 
-%if v == "delavec":
-<p>TI PA TO NE SMEŠ</p>
-%else:
+
 
 
 
 <table cellpadding="0" cellspacing="0" border="1">
-    <tr>
-        <th>Ime</th>
-        <th>Priimek</th>
-        <th>Naslov</th>
-        <th>Mesto</th>
-        <th>TRR</th>
-        <th>Uporabniško ime</th>
-        <th>Geslo</th>
-        <th>Plača</th>
-        <th>Število ur</th>
-     </tr>
-     %for (ime ,priimek , naslov, mesto , trr,uporabnisko_ime , geslo , placa, stevilo_ur) in zaposlene:
-     <tr>
-        <td>{{ime}}</td>
-        <td>{{priimek}}</td>
-        <td>{{naslov}}</td>
-        <td>{{mesto}}</td>
-        <td>{{trr}}</td>
-        <td>{{uporabnisko_ime}}</td>
-        <td>{{geslo}}</td>
-        <td>{{placa}}</td>
-        <td>{{stevilo_ur}}</td>
+   <tr>
+       <th>Ime</th>
+       <th>Priimek</th>
+       <th>Naslov</th>
+       <th>Mesto</th>
+       <th>TRR</th>
+       <th>Uporabniško ime</th>
+       <th>Geslo</th>
+       <th>Plača</th>
+       <th>Število ur</th>
+       <th>Uredi</th>  <!-- Dodali smo stolpec "Uredi" -->
+   </tr>
+   %for (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo, placa, stevilo_ur) in zaposlene:
+   <tr>
+       <td>{{ime}}</td>
+       <td>{{priimek}}</td>
+       <td>{{naslov}}</td>
+       <td>{{mesto}}</td>
+       <td>{{trr}}</td>
+       <td>{{uporabnisko_ime}}</td>
+       <td>{{geslo}}</td>
+       <td>{{placa}}</td>
+       <td>{{stevilo_ur}}</td>
+       <td><a href="/uredi_zaposlenega/{{trr}}">Uredi</a></td>
      </tr>
    %end    
 </table>

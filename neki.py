@@ -29,7 +29,8 @@ conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, passwo
 #conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT) # onemogočimo transakcije
 cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
-
+#za debugiranje
+import logging
 
 #za debugiranje
 #debug(True)
@@ -105,6 +106,8 @@ def zaposleni_get():
     print(vlogica)
     return template("zaposleni.html",  zaposlene=cur,v=vlogica,u = uporabniski_imencek )
 
+
+
 @get("/dodaj_zaposlenega")
 def dodaj_zaposlenega_get():
     return template("dodaj_zaposlenega.html",
@@ -141,6 +144,95 @@ def dodaj_zaposlenega_post():
         return template('dodaj_zaposlenega.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
                          uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= 'Zgodila se je napaka: %s' % ex)
     redirect(url("zaposleni_get"))
+
+@get("/uredi_zaposlenega/<trr>")
+def uredi_zaposlenega_get(trr):
+    try: 
+        # Preverimo, ali zaposleni s podanim imenom že obstaja
+        cur.execute("SELECT * FROM zaposleni WHERE trr = %s", (trr,))
+        zaposleni = cur.fetchone()
+        cur.execute("SELECT * FROM vloge WHERE trr = %s", (trr,))
+        vlogica =cur.fetchone()
+        if zaposleni:
+            # Zaposleni s podanim imenom obstaja, izvedemo posodobitev
+            # Pripravimo podatke za prikaz v obrazcu za urejanje
+            ime = zaposleni[0]
+            uporabnisko_ime = zaposleni[5] 
+            priimek = zaposleni[1]
+            mesto = zaposleni[3]
+            naslov = zaposleni[2]
+            geslo = zaposleni[6]
+            placa = zaposleni[7]
+            st_ur = zaposleni[8]
+            vloga = vlogica[1]
+            id_oddelek =vlogica[2]
+            # Lahko prav tako preberemo podatke iz tabele vloge, če je to potrebno
+            # cur.execute("SELECT * FROM vloge WHERE TRR = %s", (trr,))
+            # vloge = cur.fetchone()
+            # vloga = vloge[1]
+            # oddelek = vloge[2]
+
+            # Prikazujemo obrazec za urejanje z že obstoječimi podatki
+            return template("uredi_zaposlenega.html", ime=ime, priimek=priimek, mesto=mesto,
+                            naslov=naslov, trr=trr, uporabnisko_ime=uporabnisko_ime, geslo=geslo, placa=placa,
+                            st_ur=st_ur, vloga=vloga, oddelek=id_oddelek)
+        else:
+            # Zaposleni s podanim imenom ne obstaja, vrnejo lahko ustrezno sporočilo ali preusmerijo na drugo stran
+            return "Zaposleni s tem imenom ne obstaja."
+
+    except Exception as ex:
+        print(ex)
+        return "Zgodila se je napaka: %s" % ex
+
+@post("/uredi_zaposlenega/<trr>")
+def uredi_zaposlenega_post(trr):
+    try:
+        # Preberemo vse podatke iz POST zahteve
+        ime = request.forms.get('Ime')
+        priimek = request.forms.get('Priimek')
+        mesto = request.forms.get('Mesto')
+        naslov = request.forms.get('Naslov')
+        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+        geslo = request.forms.get('Geslo')
+        placa = request.forms.get('Placa')
+        st_ur = request.forms.get('Stevilo_ur')
+        vloga = request.forms.get('Vloga')
+        oddelek = request.forms.get('Oddelek')
+
+
+        # Izvedemo SQL poizvedbo za posodobitev podatkov o zaposlenem, če je kaj spremenjeno
+        cur.execute("""UPDATE zaposleni SET
+            ime = %s, priimek = %s, mesto = %s, naslov = %s,
+            uporabnisko_ime = %s, geslo = %s, placa = %s,
+            stevilo_ur = %s WHERE trr = %s""",
+            (ime, priimek, mesto, naslov, uporabnisko_ime,
+            geslo, placa, st_ur, trr))
+
+        # Preverimo, ali obstaja vnos za ta zaposleni v tabeli "vloge"
+        cur.execute("SELECT * FROM vloge WHERE trr = %s", (trr,))
+        vloga_obstaja = cur.fetchone()
+
+        if vloga_obstaja:
+            # Zaposleni ima že vnos v tabeli "vloge", izvedemo posodobitev
+            cur.execute("""UPDATE vloge SET vloga = %s, id_oddelek = %s WHERE trr = %s""",
+                        (vloga, oddelek, trr))
+        else:
+            # Zaposleni še nima vnosa v tabeli "vloge", izvedemo vstavljanje novega vnosa
+            cur.execute("""INSERT INTO vloge (trr, vloga, id_oddelek) 
+                            VALUES (%s, %s, %s)""",
+                        (trr, vloga, oddelek))
+
+        conn.commit()
+        return redirect(url("zaposleni_get"))
+
+    except Exception as ex:
+        conn.rollback()
+        logging.exception("Napaka pri urejanju zaposlenega:")
+        return "Zgodila se je napaka: %s" % ex
+
+
+
+
 
 @get("/place/")
 #@cookie required ?
