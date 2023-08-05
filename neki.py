@@ -222,13 +222,12 @@ def uredi_zaposlenega_post(trr):
                             VALUES (%s, %s, %s)""",
                         (trr, vloga, oddelek))
 
-        conn.commit()
-        return redirect(url("zaposleni_get"))
-
+        conn.commit()        
     except Exception as ex:
         conn.rollback()
         logging.exception("Napaka pri urejanju zaposlenega:")
         return "Zgodila se je napaka: %s" % ex
+    return redirect(url("zaposleni_get"))
 
 
 
