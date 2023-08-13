@@ -109,11 +109,15 @@ def zaposleni_get():
 
 
 @get("/dodaj_zaposlenega")
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def dodaj_zaposlenega_get():
     return template("dodaj_zaposlenega.html",
                     ime = "",priimek = '',mesto = '',naslov = '',trr = "", uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= None)
 
 @post('/dodaj_zaposlenega')
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def dodaj_zaposlenega_post():
     if False:
         "ti sment ne smes redirect"
@@ -146,6 +150,8 @@ def dodaj_zaposlenega_post():
     redirect(url("zaposleni_get"))
 
 @get("/uredi_zaposlenega/<trr>")
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def uredi_zaposlenega_get(trr):
     try: 
         # Preverimo, ali zaposleni s podanim imenom že obstaja
@@ -185,6 +191,8 @@ def uredi_zaposlenega_get(trr):
         return "Zgodila se je napaka: %s" % ex
 
 @post("/uredi_zaposlenega/<trr>")
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def uredi_zaposlenega_post(trr):
     try:
         # Preberemo vse podatke iz POST zahteve
