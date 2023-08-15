@@ -96,15 +96,25 @@ def index():
     return template('zacetna.html', osebe = cur)
 
 ##################ZAPOSLINI
+@get("/zacetna_zaposleni/")
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
+def zacetna_zaposleni_get():
+    return template("zacetna_zaposleni.html")
+
+
 @get("/zaposleni/")
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
 def zaposleni_get():
     vlogica= request.get_cookie("vloga")
     uporabniski_imencek = request.get_cookie("uporabnisko_ime")
-    cur.execute("SELECT * FROM zaposleni")
-    print(vlogica)
-    return template("zaposleni.html",  zaposlene=cur,v=vlogica,u = uporabniski_imencek )
+    if vlogica == "delavec":
+        return template("nimas_dovoljenja.html")
+    else:    
+        cur.execute("SELECT * FROM zaposleni")
+        print(vlogica)
+        return template("zaposleni.html",  zaposlene=cur,v=vlogica,u = uporabniski_imencek )
 
 
 
@@ -119,8 +129,10 @@ def dodaj_zaposlenega_get():
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
 def dodaj_zaposlenega_post():
-    if False:
-        "ti sment ne smes redirect"
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec" or vlogica =="vodja izmene":
+        return template("nimas_dovoljenja.html")
     else:
         ime = request.forms.get('Ime')
         priimek = request.forms.get('Priimek')
@@ -153,96 +165,106 @@ def dodaj_zaposlenega_post():
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
 def uredi_zaposlenega_get(trr):
-    try: 
-        # Preverimo, ali zaposleni s podanim imenom že obstaja
-        cur.execute("SELECT * FROM zaposleni WHERE trr = %s", (trr,))
-        zaposleni = cur.fetchone()
-        cur.execute("SELECT * FROM vloge WHERE trr = %s", (trr,))
-        vlogica =cur.fetchone()
-        if zaposleni:
-            # Zaposleni s podanim imenom obstaja, izvedemo posodobitev
-            # Pripravimo podatke za prikaz v obrazcu za urejanje
-            ime = zaposleni[0]
-            uporabnisko_ime = zaposleni[5] 
-            priimek = zaposleni[1]
-            mesto = zaposleni[3]
-            naslov = zaposleni[2]
-            geslo = zaposleni[6]
-            placa = zaposleni[7]
-            st_ur = zaposleni[8]
-            vloga = vlogica[1]
-            id_oddelek =vlogica[2]
-            # Lahko prav tako preberemo podatke iz tabele vloge, če je to potrebno
-            # cur.execute("SELECT * FROM vloge WHERE TRR = %s", (trr,))
-            # vloge = cur.fetchone()
-            # vloga = vloge[1]
-            # oddelek = vloge[2]
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec" or vlogica =="vodja izmene":
+        return template("nimas_dovoljenja.html")
+    else:
+        try: 
+            # Preverimo, ali zaposleni s podanim imenom že obstaja
+            cur.execute("SELECT * FROM zaposleni WHERE trr = %s", (trr,))
+            zaposleni = cur.fetchone()
+            cur.execute("SELECT * FROM vloge WHERE trr = %s", (trr,))
+            vlogica =cur.fetchone()
+            if zaposleni:
+                # Zaposleni s podanim imenom obstaja, izvedemo posodobitev
+                # Pripravimo podatke za prikaz v obrazcu za urejanje
+                ime = zaposleni[0]
+                uporabnisko_ime = zaposleni[5] 
+                priimek = zaposleni[1]
+                mesto = zaposleni[3]
+                naslov = zaposleni[2]
+                geslo = zaposleni[6]
+                placa = zaposleni[7]
+                st_ur = zaposleni[8]
+                vloga = vlogica[1]
+                id_oddelek =vlogica[2]
+                # Lahko prav tako preberemo podatke iz tabele vloge, če je to potrebno
+                # cur.execute("SELECT * FROM vloge WHERE TRR = %s", (trr,))
+                # vloge = cur.fetchone()
+                # vloga = vloge[1]
+                # oddelek = vloge[2]
 
-            # Prikazujemo obrazec za urejanje z že obstoječimi podatki
-            return template("uredi_zaposlenega.html", ime=ime, priimek=priimek, mesto=mesto,
-                            naslov=naslov, trr=trr, uporabnisko_ime=uporabnisko_ime, geslo=geslo, placa=placa,
-                            st_ur=st_ur, vloga=vloga, oddelek=id_oddelek)
-        else:
-            # Zaposleni s podanim imenom ne obstaja, vrnejo lahko ustrezno sporočilo ali preusmerijo na drugo stran
-            return "Zaposleni s tem imenom ne obstaja."
-
-    except Exception as ex:
-        print(ex)
-        return "Zgodila se je napaka: %s" % ex
+                # Prikazujemo obrazec za urejanje z že obstoječimi podatki
+                return template("uredi_zaposlenega.html", ime=ime, priimek=priimek, mesto=mesto,
+                                naslov=naslov, trr=trr, uporabnisko_ime=uporabnisko_ime, geslo=geslo, placa=placa,
+                                st_ur=st_ur, vloga=vloga, oddelek=id_oddelek)
+            else:
+                # Zaposleni s podanim imenom ne obstaja, vrnejo lahko ustrezno sporočilo ali preusmerijo na drugo stran
+                return "Zaposleni s tem imenom ne obstaja."
+        except Exception as ex:
+            print(ex)
+            return "Zgodila se je napaka: %s" % ex
 
 @post("/uredi_zaposlenega/<trr>")
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
 def uredi_zaposlenega_post(trr):
-    try:
-        # Preberemo vse podatke iz POST zahteve
-        ime = request.forms.get('Ime')
-        priimek = request.forms.get('Priimek')
-        mesto = request.forms.get('Mesto')
-        naslov = request.forms.get('Naslov')
-        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-        geslo = request.forms.get('Geslo')
-        placa = request.forms.get('Placa')
-        st_ur = request.forms.get('Stevilo_ur')
-        vloga = request.forms.get('Vloga')
-        oddelek = request.forms.get('Oddelek')
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec" or vlogica =="vodja izmene":
+        return template("nimas_dovoljenja.html")
+    else:
+        try:
+            # Preberemo vse podatke iz POST zahteve
+            ime = request.forms.get('Ime')
+            priimek = request.forms.get('Priimek')
+            mesto = request.forms.get('Mesto')
+            naslov = request.forms.get('Naslov')
+            uporabnisko_ime = request.forms.get('Uporabnisko_ime')
+            geslo = request.forms.get('Geslo')
+            placa = request.forms.get('Placa')
+            st_ur = request.forms.get('Stevilo_ur')
+            vloga = request.forms.get('Vloga')
+            oddelek = request.forms.get('Oddelek')
 
 
-        # Izvedemo SQL poizvedbo za posodobitev podatkov o zaposlenem, če je kaj spremenjeno
-        cur.execute("""UPDATE zaposleni SET
-            ime = %s, priimek = %s, mesto = %s, naslov = %s,
-            uporabnisko_ime = %s, geslo = %s, placa = %s,
-            stevilo_ur = %s WHERE trr = %s""",
-            (ime, priimek, mesto, naslov, uporabnisko_ime,
-            geslo, placa, st_ur, trr))
+            # Izvedemo SQL poizvedbo za posodobitev podatkov o zaposlenem, če je kaj spremenjeno
+            cur.execute("""UPDATE zaposleni SET
+                ime = %s, priimek = %s, mesto = %s, naslov = %s,
+                uporabnisko_ime = %s, geslo = %s, placa = %s,
+                stevilo_ur = %s WHERE trr = %s""",
+                (ime, priimek, mesto, naslov, uporabnisko_ime,
+                geslo, placa, st_ur, trr))
 
-        # Preverimo, ali obstaja vnos za ta zaposleni v tabeli "vloge"
-        cur.execute("SELECT * FROM vloge WHERE trr = %s", (trr,))
-        vloga_obstaja = cur.fetchone()
+            # Preverimo, ali obstaja vnos za ta zaposleni v tabeli "vloge"
+            cur.execute("SELECT * FROM vloge WHERE trr = %s", (trr,))
+            vloga_obstaja = cur.fetchone()
 
-        if vloga_obstaja:
-            # Zaposleni ima že vnos v tabeli "vloge", izvedemo posodobitev
-            cur.execute("""UPDATE vloge SET vloga = %s, id_oddelek = %s WHERE trr = %s""",
-                        (vloga, oddelek, trr))
-        else:
-            # Zaposleni še nima vnosa v tabeli "vloge", izvedemo vstavljanje novega vnosa
-            cur.execute("""INSERT INTO vloge (trr, vloga, id_oddelek) 
-                            VALUES (%s, %s, %s)""",
-                        (trr, vloga, oddelek))
+            if vloga_obstaja:
+                # Zaposleni ima že vnos v tabeli "vloge", izvedemo posodobitev
+                cur.execute("""UPDATE vloge SET vloga = %s, id_oddelek = %s WHERE trr = %s""",
+                            (vloga, oddelek, trr))
+            else:
+                # Zaposleni še nima vnosa v tabeli "vloge", izvedemo vstavljanje novega vnosa
+                cur.execute("""INSERT INTO vloge (trr, vloga, id_oddelek) 
+                                VALUES (%s, %s, %s)""",
+                            (trr, vloga, oddelek))
 
-        conn.commit()        
-    except Exception as ex:
-        conn.rollback()
-        logging.exception("Napaka pri urejanju zaposlenega:")
-        return "Zgodila se je napaka: %s" % ex
-    return redirect(url("zaposleni_get"))
+            conn.commit()        
+        except Exception as ex:
+            conn.rollback()
+            logging.exception("Napaka pri urejanju zaposlenega:")
+            return "Zgodila se je napaka: %s" % ex
+        return redirect(url("zaposleni_get"))
 
 
 
 
 
 @get("/place/")
-#@cookie required ?
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def place():
     if False:
         "TI baraba nesmes!"
@@ -256,34 +278,34 @@ def place():
         print("Fetched rows:", results)
     return template("place.html",place = results)
 
-@get("/spremeni_placo")
-@cookie_required_zaposlen_uporabnisko_ime
-@cookie_required_zaposlen_vloga
-def spremeni_placo_get():
-    return template("spremeni_placo.html", trr = "",nova_placa = "", napaka= None)
+# @get("/spremeni_placo")
+# @cookie_required_zaposlen_uporabnisko_ime
+# @cookie_required_zaposlen_vloga
+# def spremeni_placo_get():
+#     return template("spremeni_placo.html", trr = "",nova_placa = "", napaka= None)
 
 
-@post("/spremeni_placo")
-@cookie_required_zaposlen_uporabnisko_ime
-@cookie_required_zaposlen_vloga 
-def spremeni_placo_post():
-    moja_vloga= request.get_cookie("vloga",secret="skrivnost")
-    if moja_vloga == "delavec":
-        print("TI pa ne smes HAHA")
-    else:
-        print(moja_vloga)
-        trr = request.forms.get("TRR")
-        nova_placa = request.forms.get("Nova placa")
-    try:
-        cur.execute("""UPDATE zaposleni
-            SET placa = %s
-            WHERE trr = %s;
-            """,(nova_placa, trr))
-        conn.commit()
-    except Exception as ex:
-        conn.rollback()
-        return template("spremeni_placo.html", trr = "",nova_placa = "", napaka= 'Zgodila se je napaka: %s' % ex)
-    return(url("place"))
+# @post("/spremeni_placo")
+# @cookie_required_zaposlen_uporabnisko_ime
+# @cookie_required_zaposlen_vloga 
+# def spremeni_placo_post():
+#     moja_vloga= request.get_cookie("vloga")
+#     if moja_vloga == "delavec":
+#         print("TI pa ne smes HAHA")
+#     else:
+#         print(moja_vloga)
+#         trr = request.forms.get("TRR")
+#         nova_placa = request.forms.get("Nova placa")
+#     try:
+#         cur.execute("""UPDATE zaposleni
+#             SET placa = %s
+#             WHERE trr = %s;
+#             """,(nova_placa, trr))
+#         conn.commit()
+#     except Exception as ex:
+#         conn.rollback()
+#         return template("spremeni_placo.html", trr = "",nova_placa = "", napaka= 'Zgodila se je napaka: %s' % ex)
+#     return(url("place"))
         
 
 
@@ -379,11 +401,11 @@ def prijava_zaposleni_post():
         cur.execute("SELECT * FROM zaposleni")
 #        print(request.get_cookie("uporabnisko_ime"))
 #        print(request.get_cookie("vloga"))
-        return template("zacetna_zaposleni.html",  zaposlene=cur,v=vloga_za_cookie,u=uporabnisko_ime)
+        redirect(url('/zacetna_zaposleni/'))
         #return print(request.get_cookie("uporabnisko_ime"))        
     else:
         return print("tu te ni")
-    #redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
+     #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 #OSNUTEK KODE ZA PRIJAVO IN REGISTRACIJO
 
@@ -421,7 +443,6 @@ def prijava_post():
     else:
         return print("tu te ni")
     
-    #redirect(url('zaposleni')) #pri zgornjem redirectu je treba sam napisat kam naj se da
 
 
 
