@@ -6,6 +6,7 @@
       <th>Prodajna cena produkta</th>
       <th>Nabavna cena produkta</th>
       <th>Ime produkta</th>
+      <th></th>
    </tr>
    %for (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) in produkti:
   <tr>
@@ -13,17 +14,17 @@
      <td>{{prodajna_cena}}</td>
      <td>{{nabavna_cena}}</td>
      <td>{{ime_produkt}}</td>
-     <td class="myButton">
-       <form action="{{url('produkti_uredi', id_produkt=id_produkt)}}" method="GET">
-         <a href="/uredi_produkt" onclick="this.parentElement.submit()">Uredi</a>
+     <td class="akcije">
+       <form action="{{url('produkti_uredi', id_produkt = id_produkt)}}" method="GET">
+        <button type="submit">Uredi</button>
        </form>
        <form action="{{url('produkti_brisi', id_produkt=id_produkt)}}" method="POST">
-         <a href="/produkti/" >Izbriši</a>
+        <button type="submit">Izbriši</button>
        </form>
      </td>
    </tr>
    %end
  </table>
-%if True:
+ %if True:
 
-<a href="/dodaj_produkt" class="myButton" >Dodaj produkt</a>
+ <a href="/uredi_produkt" class="myButton" >Dodaj produkt</a>
