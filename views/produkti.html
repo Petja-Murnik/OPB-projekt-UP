@@ -14,12 +14,12 @@
      <td>{{prodajna_cena}}</td>
      <td>{{nabavna_cena}}</td>
      <td>{{ime_produkt}}</td>
-     <td class="akcije">
+     <td class="myButton">
        <form action="{{url('produkti_uredi', id_produkt = id_produkt)}}" method="GET">
         <button type="submit">Uredi</button>
        </form>
-       <form action="{{url('produkti_brisi', id_produkt=id_produkt)}}" method="POST">
-        <button type="submit">Izbriši</button>
+       <form action="{{url('produkti_brisi', id_produkt = id_produkt)}}" method="POST">
+       <button type="submit">Izbriši</button>
        </form>
      </td>
    </tr>
@@ -27,4 +27,4 @@
  </table>
  %if True:
 
- <a href="/uredi_produkt" class="myButton" >Dodaj produkt</a>
+ <a href="/produkti/dodaj" class="myButton" >Dodaj produkt</a>

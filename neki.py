@@ -330,7 +330,7 @@ def hashGesla(s):
 
 ########################################################### PRODUKTI
 @get("/produkti/")
-def produkti_get():
+def produkti():
     cur.execute("SELECT * from produkti")
     return template("produkti.html", produkti=cur)
 
@@ -360,12 +360,11 @@ def produkti_uredi_post(id_produkt):
         WHERE id_produkt = ?""" (novi_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt))
     redirect(url('produkti'))
 
-@post('produkti/brisi/<id_produkt>')
-def produkti_brisi(id_produkt):
-    cur.execute("""
-                DELETE FROM produkti WHERE id_produkt = ?
-                """, (id_produkt))
-    redirect(url('produkti'))
+@post('/produkti/brisi/<id_produkt>')
+def produkti_brisi(cur, id_produkt):
+    cur.execute("""DELETE FROM produkti WHERE id_produkt = ?
+                """, (id_produkt, ))
+    return template("produkti.html")
 
 ###################################################PRIJAVA zaposleni
 @get('/prijava_zaposleni/') 
