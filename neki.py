@@ -361,9 +361,8 @@ def produkti_uredi_post(id_produkt):
     redirect(url('produkti'))
 
 @post('/produkti/brisi/<id_produkt>')
-def produkti_brisi(cur, id_produkt):
-    cur.execute("""DELETE FROM produkti WHERE id_produkt = ?
-                """, (id_produkt, ))
+def produkti_brisi(id_produkt):
+    cur.execute("DELETE FROM produkti WHERE id_produkt = %s", [id_produkt])
     return template("produkti.html")
 
 ###################################################PRIJAVA zaposleni
