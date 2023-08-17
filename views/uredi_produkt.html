@@ -2,17 +2,54 @@
 % setdefault('prodajna_cena', '')
 % setdefault('nabavna_cena', '')
 % setdefault('ime_produkt', '')
+% rebase('osnova.html', naslov=('produkti (urejanje)'))
 
-% rebase('osnova.html', naslov=('produkti (urejanje)' if id_produkt else 'produkti (dodajanje)'))
+<style>
+    .table-container {
+      display: flex;
+      align-items: flex-start;
+    }
+ 
+    .table-container table:nth-child(1) {
+      flex-shrink: 0;
+    }
+ 
+    .table-container table:nth-child(2) {
+      flex-shrink: 1;
+    }
+ 
+    #customers {
+   font-family: Arial, Helvetica, sans-serif;
+   border-collapse: collapse;
+   width: 100%;
+ }
+ 
+ #customers td, #customers th {
+   border: 1px solid #ddd;
+   padding: 8px;
+ }
+ 
+ #customers tr:nth-child(even){background-color: #f2f2f2;}
+ 
+ #customers tr:hover {background-color: #ddd;}
+ 
+ #customers th {
+   padding-top: 12px;
+   padding-bottom: 12px;
+   text-align: left;
+   background-color: #04AA6D;
+   color: white;
+ }
+  </style>
 
-<form action="{{url('produkti_uredi_post', id_produkt=id_produkt) if id_produkt else url('produkti_dodaj_post')}}" method="POST">
-  <table>
+<form action="{{url('produkti_uredi_post', id_produkt=id_produkt)}}" method="POST">
+    <table cellpadding="0" cellspacing="0" border="1" id="customers">
       <tr>
           <td>
               <span>Id. produkta:</span>
           </td>
           <td>
-              <input name="id_produkt" type="number" value="{{id_produkt}}" required
+              <input name="id_produkt" value="{{id_produkt}}" required
                oninput="this.setCustomValidity('')"
                oninvalid="this.setCustomValidity('Obvezen podatek')" />
           </td>
@@ -22,7 +59,7 @@
               <span>Prodajna cena produkta:</span>
           </td>
           <td>
-              <input name="prodajna_cena" type="number" value="{{prodajna_cena}}" required
+              <input name="prodajna_cena" value="{{prodajna_cena}}" required
                oninput="this.setCustomValidity('')"
                oninvalid="this.setCustomValidity('Obvezen podatek')" />
           </td>
@@ -32,7 +69,7 @@
               <span>Nabavna cena produkta:</span>
           </td>
           <td>
-            <input name="nabavna_cena" type="number" value="{{nabavna_cena}}" required
+            <input name="nabavna_cena" value="{{nabavna_cena}}" required
                oninput="this.setCustomValidity('')"
                oninvalid="this.setCustomValidity('Obvezen podatek')" />
           </td>
@@ -42,7 +79,7 @@
               <span>Ime produkta:</span>
           </td>
           <td>
-            <input name="ime_produkt" type="text" value="{{ime_produkt}}" required
+            <input name="ime_produkt" value="{{ime_produkt}}" required
                oninput="this.setCustomValidity('')"
                oninvalid="this.setCustomValidity('Obvezen podatek')" />
           </td>
@@ -51,7 +88,7 @@
       <tr>
           <td></td>
           <td>
-              <input value="{{'Uredi' if id_produkt else 'Dodaj'}}" type="submit" />
+              <input value="{{'Uredi'}}" type="submit" />
           </td>
       </tr>
   </table>

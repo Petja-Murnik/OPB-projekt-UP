@@ -345,9 +345,12 @@ def produkti_dodaj():
 
 @get('/produkti/uredi/<id_produkt>')
 def produkti_uredi(id_produkt):
-    cur.execute("""SELECT prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = ?
-                """, (id_produkt))
-    return template("produkti.html")
+    cur.execute("SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = %s", [id_produkt])
+    res = cur.fetchone()
+    if res is None:
+        redirect(url('produkti'))
+    id_produkt, prodajna_cena, nabavna_cena, ime_produkt = res
+    return template("uredi_produkt.html", id_produkt=id_produkt, prodajna_cena=prodajna_cena, nabavna_cena=nabavna_cena, ime_produkt=ime_produkt)
     
 @post('/produkti/uredi/<id_produkt>')
 def produkti_uredi_post(id_produkt):
@@ -355,9 +358,7 @@ def produkti_uredi_post(id_produkt):
     prodajna_cena = request.forms.getunicode('prodajna_cena')
     nabavna_cena = request.forms.getunicode('nabavna_cena')
     ime_produkt = request.forms.getunicode('ime_produkt')
-    cur.execute("""
-        UPDATE produkti SET id_produkt = ?, prodajna_cena = ?, nabavna_cena = ?, ime_produkt = ?
-        WHERE id_produkt = ?""" (novi_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt))
+    cur.execute("UPDATE produkti SET id_produkt = %s, prodajna_cena = %s, nabavna_cena = %s, ime_produkt = %s WHERE id_produkt = %s", [novi_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt])
     redirect(url('produkti'))
 
 @post('/produkti/brisi/<id_produkt>')
