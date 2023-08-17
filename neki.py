@@ -343,6 +343,15 @@ def produkti_prodani_get():
 def produkti_dodaj():
     return template("uredi_produkt.html")
 
+@post("/produkti/dodaj")
+def produkti_dodaj_post():
+    id_produkt = request.forms.getunicode('id_produkt')
+    prodajna_cena = request.forms.getunicode('prodajna_cena')
+    nabavna_cena = request.forms.getunicode('nabavna_cena')
+    ime_produkt = request.forms.getunicode('ime_produkt')
+    cur.execute("INSERT INTO produkti (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) VALUES (%s, %s, %s, %s)", (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
+    redirect(url('produkti'))
+
 @get('/produkti/uredi/<id_produkt>')
 def produkti_uredi(id_produkt):
     cur.execute("SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = %s", [id_produkt])
