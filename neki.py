@@ -363,7 +363,7 @@ def produkti_uredi_post(id_produkt):
 @post('/produkti/brisi/<id_produkt>')
 def produkti_brisi(id_produkt):
     cur.execute("DELETE FROM produkti WHERE id_produkt = %s", [id_produkt])
-    return template("produkti.html")
+    redirect(url('produkti'))
 
 ###################################################PRIJAVA zaposleni
 @get('/prijava_zaposleni/') 
