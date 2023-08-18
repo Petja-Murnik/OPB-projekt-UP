@@ -448,7 +448,7 @@ def prijava_post():
         print(hashBaza)
         print(geslo)#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
     if geslo == hashBaza:
-        response.set_cookie("uporabnisko_ime",uporabnisko_ime)
+        response.set_cookie("uporabnisko_ime",uporabnisko_ime, path="/")
         cur.execute("SELECT * FROM zaposleni")
         return template("zacetna.html",  zaposlene=cur)
         #return print(request.get_cookie("uporabnisko_ime"))     
@@ -485,7 +485,7 @@ def registracija_post():
         cur.execute("INSERT INTO kupci (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo) VALUES (%s,%s,%s,%s,%s,%s,%s)",
                     (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo1))
         conn.commit()
-        response.set_cookie("uporabnisko_ime", uporabnisko_ime)
+        response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
         print("juhuhu")#neki   
 
         
@@ -525,7 +525,10 @@ def nakupuj_get():
         kosarica = {}
     else:
         kosarica = eval(kosarica)
-    return template("nakupuj.html", produkti=rows, kosarica=kosarica)
+    
+    print(request.get_cookie("uporabnisko_ime"))
+    prijavljen = False if request.get_cookie("uporabnisko_ime") is None else True
+    return template("nakupuj.html", produkti=rows, kosarica=kosarica, prijavljen=prijavljen)
 
 @post("/dodaj_v_kosarico")
 def dodaj_v_kosarico():
@@ -543,7 +546,7 @@ def dodaj_v_kosarico():
     response.set_cookie("kosarica", value=kosarica_str)
     cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
     rows = cur.fetchall()
-    return template("nakupuj.html", produkti=rows, kosarica=kosarica)
+    return template("nakupuj.html", produkti=rows, kosarica=kosarica, prijavljen=True)
 
 @post("/odstrani_iz_kosarice")
 def odstrani_iz_kosarice():
@@ -560,7 +563,7 @@ def odstrani_iz_kosarice():
     response.set_cookie("kosarica", value=kosarica_str)
     cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
     rows = cur.fetchall()
-    return template("nakupuj.html", produkti=rows, kosarica=kosarica)
+    return template("nakupuj.html", produkti=rows, kosarica=kosarica, prijavljen=True)
 
 @get("/zakljuci_nakup")
 def zakljuci_nakup():
@@ -572,8 +575,12 @@ def zakljuci_nakup():
         kosarica = eval(kosarica)
 
     for produkt in kosarica.items():
-        cur.execute(f"INSERT INTO prodani_produkti (cas_nakupa, uporabnisko_ime, produkt, cena, kolicina) VALUES ('{date.today()}', '{uporabnisko_ime}', '{produkt[0]}', '{(produkt[1])[0]}', '{(produkt[1])[1]}')")
+        print(f"Dodajanje {len(kosarica.items())} produktov...")
+        cur.execute("INSERT INTO prodani_produkti (cas_nakupa, uporabnisko_ime, produkt, cena, kolicina) VALUES (%s,%s,%s,%s,%s)", (str(date.today()), uporabnisko_ime, produkt[0], (produkt[1])[0], (produkt[1])[0] ))
+        conn.commit()
+    response.delete_cookie("kosarica")
     
+
     return template("nakup_zakljucen.html")
 
 #TO MORE BITI TUKAJ SPODAJ KODO PIŠI VIŠJE !!!

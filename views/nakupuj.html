@@ -1,18 +1,14 @@
 %rebase('osnova.html', naslov='shoping')
 
 <style>
-   .table-container {
-     display: flex;
-     align-items: flex-start;
-   }
+css
+.table-container {
+  display: flex;
+}
 
-   .table-container table:nth-child(1) {
-     flex-shrink: 0;
-   }
-
-   .table-container table:nth-child(2) {
-     flex-shrink: 1;
-   }
+.table-left, .table-right {
+  flex: 1;
+}
 
    #customers {
   font-family: Arial, Helvetica, sans-serif;
@@ -38,8 +34,9 @@
 }
  </style>
  <div class="table-container">
-<table cellpadding="0" cellspacing="0" border="1" id="customers">
-   <a href="/kosarica/">Košarica</a>
+   <div class ="table-left">
+<table cellpadding="0" cellspacing="0" border="1" id="customers" >
+   <a href="/" class="myButton" >Nazaj </a>
     <tr>
         <th>Prodajna cena produkta</th>
         <th>Ime produkta</th>
@@ -54,15 +51,18 @@
             <input type="hidden" value="{{prodajna_cena}}" name="prodajna_cena">
             <input type="hidden" value="{{ime_produkt}}" name="ime_produkt">
             <input type="number" min="1" value="1" name="kolicina">
+         % if prijavljen:
             <button type="submit">Dodaj v košarico</button>
+         % end
           </form>
          </td>
      </tr>
 
    %end
 </table>
-
-<table cellpadding="0" cellspacing="0" border="1" id="customers">
+</div>
+<div class=" "table-right>
+<table cellpadding="0" cellspacing="0" border="1" id="customers" class="table-right">
    <tr>
       <th>Ime produkta</th>
       <th>Prodajna cena produkta</th>
@@ -86,10 +86,15 @@
    <tr>
       <td>Vsota:</td>
       <td>{{sum}}</td>
+   % if prijavljen:
       <a href="/zakljuci_nakup">zakljuci nakup</a>
+   % else:
+      za nakup se je treba prijaviti
+   % end
    </tr>
    <tr>
       <td></td>
    </tr>
 </table>
+</div>
 </div>
