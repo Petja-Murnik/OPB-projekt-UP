@@ -576,7 +576,7 @@ def zakljuci_nakup():
 
     for produkt in kosarica.items():
         print(f"Dodajanje {len(kosarica.items())} produktov...")
-        cur.execute("INSERT INTO prodani_produkti (cas_nakupa, uporabnisko_ime, produkt, cena, kolicina) VALUES (%s,%s,%s,%s,%s)", (str(date.today()), uporabnisko_ime, produkt[0], (produkt[1])[0], (produkt[1])[0] ))
+        cur.execute("INSERT INTO prodani_produkti (cas_nakupa, uporabnisko_ime, produkt, cena, kolicina) VALUES (%s,%s,%s,%s,%s)", (str(date.today()), uporabnisko_ime, produkt[0], (produkt[1])[0], (produkt[1])[1] ))
         conn.commit()
     response.delete_cookie("kosarica")
     
