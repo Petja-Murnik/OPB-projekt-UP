@@ -1,6 +1,45 @@
 % rebase('osnova.html', naslov='Produkti')
 
-<table cellpadding="0" cellspacing="0" border="1">
+<style>
+   .table-container {
+     display: flex;
+     align-items: flex-start;
+   }
+ 
+   .table-container table:nth-child(1) {
+     flex-shrink: 0;
+   }
+ 
+   .table-container table:nth-child(2) {
+     flex-shrink: 1;
+   }
+ 
+   #customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+ }
+ 
+ #customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+ }
+ 
+ #customers tr:nth-child(even){background-color: #f2f2f2;}
+ 
+ #customers tr:hover {background-color: #ddd;}
+ 
+ #customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+ }
+ </style>
+ 
+ <table cellpadding="0" cellspacing="0" border="1" id="customers">
+   <a href="/" class="myButton" >Nazaj </a>
    <tr>
       <th>Id. prodaje</th>
       <th>cas nakupa</th>
@@ -9,7 +48,7 @@
       <th>kolicina</th>
       <th>cena</th>
    </tr>
-   %for (id_opravljeni_nakup, cas_nakupa, uporabnisko_ime, produkt,kolicina,cena) in produkti:
+   %for (id_opravljeni_nakup, cas_nakupa, uporabnisko_ime, produkt, kolicina, cena) in produkti:
   <tr>
      <td>{{id_opravljeni_nakup}}</td>
      <td>{{cas_nakupa}}</td>
@@ -20,4 +59,4 @@
    </tr>
    %end
  </table>
- <a href="/zacetna">nazaj</a>
+
