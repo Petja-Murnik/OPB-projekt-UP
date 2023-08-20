@@ -1,7 +1,45 @@
-%rebase('osnova.html', naslov='Komitenti banke')
+%rebase('osnova.html', naslov='place')
+
+<style>
+   .table-container {
+     display: flex;
+     align-items: flex-start;
+   }
+ 
+   .table-container table:nth-child(1) {
+     flex-shrink: 0;
+   }
+ 
+   .table-container table:nth-child(2) {
+     flex-shrink: 1;
+   }
+ 
+   #customers {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+ }
+ 
+ #customers td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+ }
+ 
+ #customers tr:nth-child(even){background-color: #f2f2f2;}
+ 
+ #customers tr:hover {background-color: #ddd;}
+ 
+ #customers th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #04AA6D;
+  color: white;
+ }
+ </style>
 
 %if True:
-   <table cellpadding="0" cellspacing="0" border="1">
+<table cellpadding="0" cellspacing="0" border="1" id="customers">
     <tr>
         <th>Ime in priimek</th>
         <th>Plača</th>
@@ -10,6 +48,11 @@
      <tr>
         <td>{{ime_priimek}}</td>
         <td>{{placa}}</td>
+        <td class="myButton">
+          <form action="{{url('place_uredi', ime_priimek = ime_priimek)}}" method="GET">
+           <button type="submit">Uredi</button>
+          </form>
+        </td>
      </tr>    
      %end
    </table>
