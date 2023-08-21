@@ -344,6 +344,12 @@ def produkti_prodani_get():
     cur.execute("SELECT * from prodani_produkti")
     return template("prodani_produkti.html", produkti=cur)
 
+# Pomozna metoda za brisanje prodanih produktov
+@post('/prodani_produkti/brisi/')
+def prodani_produkti_brisi():
+        cur.execute("DELETE FROM prodani_produkti")
+        redirect(url('prodani_produkti'))
+
 @get("/produkti/dodaj")
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
