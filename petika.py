@@ -95,7 +95,7 @@ def static(filename):
 def index():
     return template('zacetna.html', osebe = cur)
 
-##################ZAPOSLINI
+##################ZAPOSLENI
 @get("/zacetna_zaposleni/")
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
