@@ -100,7 +100,8 @@ def index():
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga
 def zacetna_zaposleni_get():
-    return template("zacetna_zaposleni.html")
+    vlogica= request.get_cookie("vloga")
+    return template("zacetna_zaposleni.html" , v = vlogica)
 
 
 @get("/zaposleni/")
@@ -330,50 +331,89 @@ def hashGesla(s):
 
 ########################################################### PRODUKTI
 @get("/produkti/")
+@cookie_required_zaposlen_uporabnisko_ime
 def produkti():
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    vlogica = request.get_cookie("vloga")
     cur.execute("SELECT * from produkti")
     return template("produkti.html", produkti=cur)
 
 @get("/prodani_produkti/")
+@cookie_required_zaposlen_uporabnisko_ime
 def produkti_prodani_get():
     cur.execute("SELECT * from prodani_produkti")
     return template("prodani_produkti.html", produkti=cur)
 
 @get("/produkti/dodaj")
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def produkti_dodaj():
-    return template("uredi_produkt.html")
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec":
+        return template("nimas_dovoljenja.html")
+    else:
+        return template("uredi_produkt.html")
 
 @post("/produkti/dodaj")
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def produkti_dodaj_post():
-    id_produkt = request.forms.getunicode('id_produkt')
-    prodajna_cena = request.forms.getunicode('prodajna_cena')
-    nabavna_cena = request.forms.getunicode('nabavna_cena')
-    ime_produkt = request.forms.getunicode('ime_produkt')
-    cur.execute("INSERT INTO produkti (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) VALUES (%s, %s, %s, %s)", (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
-    redirect(url('produkti'))
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec" :
+        return template("nimas_dovoljenja.html")
+    else:
+        id_produkt = request.forms.getunicode('id_produkt')
+        prodajna_cena = request.forms.getunicode('prodajna_cena')
+        nabavna_cena = request.forms.getunicode('nabavna_cena')
+        ime_produkt = request.forms.getunicode('ime_produkt')
+        cur.execute("INSERT INTO produkti (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) VALUES (%s, %s, %s, %s)", (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
+        redirect(url('produkti'))
 
 @get('/produkti/uredi/<id_produkt>')
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def produkti_uredi(id_produkt):
-    cur.execute("SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = %s", [id_produkt])
-    res = cur.fetchone()
-    if res is None:
-        redirect(url('produkti'))
-    id_produkt, prodajna_cena, nabavna_cena, ime_produkt = res
-    return template("uredi_produkt.html", id_produkt=id_produkt, prodajna_cena=prodajna_cena, nabavna_cena=nabavna_cena, ime_produkt=ime_produkt)
-    
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec" :
+        return template("nimas_dovoljenja.html")
+    else:
+        cur.execute("SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = %s", [id_produkt])
+        res = cur.fetchone()
+        if res is None:
+            redirect(url('produkti'))
+        id_produkt, prodajna_cena, nabavna_cena, ime_produkt = res
+        return template("uredi_produkt.html", id_produkt=id_produkt, prodajna_cena=prodajna_cena, nabavna_cena=nabavna_cena, ime_produkt=ime_produkt)
+        
 @post('/produkti/uredi/<id_produkt>')
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def produkti_uredi_post(id_produkt):
-    novi_id_produkt = request.forms.getunicode('id_produkt')
-    prodajna_cena = request.forms.getunicode('prodajna_cena')
-    nabavna_cena = request.forms.getunicode('nabavna_cena')
-    ime_produkt = request.forms.getunicode('ime_produkt')
-    cur.execute("UPDATE produkti SET id_produkt = %s, prodajna_cena = %s, nabavna_cena = %s, ime_produkt = %s WHERE id_produkt = %s", [novi_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt])
-    redirect(url('produkti'))
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec" :
+        return template("nimas_dovoljenja.html")
+    else:
+        novi_id_produkt = request.forms.getunicode('id_produkt')
+        prodajna_cena = request.forms.getunicode('prodajna_cena')
+        nabavna_cena = request.forms.getunicode('nabavna_cena')
+        ime_produkt = request.forms.getunicode('ime_produkt')
+        cur.execute("UPDATE produkti SET id_produkt = %s, prodajna_cena = %s, nabavna_cena = %s, ime_produkt = %s WHERE id_produkt = %s", [novi_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt])
+        redirect(url('produkti'))
 
 @post('/produkti/brisi/<id_produkt>')
+@cookie_required_zaposlen_uporabnisko_ime
+@cookie_required_zaposlen_vloga
 def produkti_brisi(id_produkt):
-    cur.execute("DELETE FROM produkti WHERE id_produkt = %s", [id_produkt])
-    redirect(url('produkti'))
+    vlogica= request.get_cookie("vloga")
+    uporabniski_imencek = request.get_cookie("uporabnisko_ime")
+    if vlogica == "delavec" :
+        return template("nimas_dovoljenja.html")
+    else:
+        cur.execute("DELETE FROM produkti WHERE id_produkt = %s", [id_produkt])
+        redirect(url('produkti'))
 
 ###################################################PRIJAVA zaposleni
 @get('/prijava_zaposleni/') 
@@ -397,9 +437,9 @@ def prijava_zaposleni_post():
         hashBaza = None 
         print("BBB")
     if hashBaza is None:
-        return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return template('napacno_geslo_zaposleni.html',   napaka2="Zaposleni s tem imenom ne obstaja")
     if geslo != hashBaza:
-        return print("sedaj si pa tu")#print(#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return template('napacno_geslo_zaposleni.html',   napaka2="Geslo ni pravilno")
     if geslo == hashBaza:
         cur.execute("""
             SELECT vloge.vloga, zaposleni.uporabnisko_ime, zaposleni.geslo, zaposleni.trr
@@ -443,10 +483,11 @@ def prijava_post():
         print("BBB")
         #redirect na login
     if hashBaza is None:
-        return print("prisel si sem")#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        return template('napacno_geslo.html',   napaka2="Uporabnik s tem imenom ne obstaja")
     if geslo != hashBaza:
         print(hashBaza)
-        print(geslo)#template('login.html',   napaka2="Uporabniško ime ali geslo nista ustrezni")
+        print(geslo)
+        return template('napacno_geslo.html',   napaka2="Geslo ni pravilno")
     if geslo == hashBaza:
         response.set_cookie("uporabnisko_ime",uporabnisko_ime, path="/")
         cur.execute("SELECT * FROM zaposleni")
