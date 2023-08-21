@@ -1,13 +1,50 @@
 
-%rebase('osnova.html', naslov='Komitenti banke')
+%rebase('osnova.html', naslov='zaposleni')
 
+<style>
+  .table-container {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .table-container table:nth-child(1) {
+    flex-shrink: 0;
+  }
+
+  .table-container table:nth-child(2) {
+    flex-shrink: 1;
+  }
+
+  #customers {
+ font-family: Arial, Helvetica, sans-serif;
+ border-collapse: collapse;
+ width: 100%;
+}
+
+#customers td, #customers th {
+ border: 1px solid #ddd;
+ padding: 8px;
+}
+
+#customers tr:nth-child(even){background-color: #f2f2f2;}
+
+#customers tr:hover {background-color: #ddd;}
+
+#customers th {
+ padding-top: 12px;
+ padding-bottom: 12px;
+ text-align: left;
+ background-color: #04AA6D;
+ color: white;
+}
+</style>
 <a href="/zacetna_zaposleni/" class="myButton" >Nazaj </a>
 
 
 
 
 
-<table cellpadding="0" cellspacing="0" border="1">
+<table cellpadding="0" cellspacing="0" border="1" id="customers">
    <tr>
        <th>Ime</th>
        <th>Priimek</th>
@@ -35,7 +72,9 @@
      </tr>
    %end    
 </table>
+
+
+%if v == "vodja oddelka":
+  <a href="/dodaj_zaposlenega" class="myButton" >Dodaj zaposlenega</a>
 %end
 
-
-<a href="/dodaj_zaposlenega" class="myButton" >Dodaj zaposlenega</a>
