@@ -40,6 +40,7 @@
 
 %if True:
 <table cellpadding="0" cellspacing="0" border="1" id="customers">
+  <a href="/zacetna_zaposleni/" class="myButton" >Nazaj </a>
     <tr>
         <th>Ime in priimek</th>
         <th>Plača</th>
@@ -48,11 +49,6 @@
      <tr>
         <td>{{ime_priimek}}</td>
         <td>{{placa}}</td>
-        <td class="myButton">
-          <form action="{{url('place_uredi', ime_priimek = ime_priimek)}}" method="GET">
-           <button type="submit">Uredi</button>
-          </form>
-        </td>
      </tr>    
      %end
    </table>
