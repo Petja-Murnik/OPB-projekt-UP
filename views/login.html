@@ -1,5 +1,14 @@
-%rebase('osnova.html', naslov='Registracija')
+%rebase('osnova.html', naslov='Prijava')
 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Login page in HTML</title>
+</head>
+<body>
 <a href="/" class="myButton" >Nazaj </a>
 
 %if napaka2:
@@ -7,7 +16,7 @@
 %end
 
   <form action="{{url('prijava_post')}}" method="POST">
-  <h1 class="h3 mb-3 font-weight-normal">Registracija</h1>
+  <h1 class="h3 mb-3 font-weight-normal">Prijava</h1>
   <label for="inputUsername" class="sr-only">Uporabniško ime</label>
   <input type="username" id="inputUsername" class="form-control" placeholder="Uporabnisko ime" name="Uporabnisko_ime" value = "{{uporabnisko_ime}}" required autofocus>
   <label for="inputPassword" class="sr-only">Geslo</label>
@@ -19,3 +28,100 @@
 
 
 </form>
+</body>
+</html>
+<!-- 
+<html>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box}
+
+/* Full-width input fields */
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+hr {
+  border: 1px solid #f1f1f1;
+  margin-bottom: 25px;
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+button:hover {
+  opacity:1;
+}
+
+/* Extra styles for the cancel button */
+.cancelbtn {
+  padding: 14px 20px;
+  background-color: #f44336;
+}
+
+/* Float cancel and signup buttons and add an equal width */
+.cancelbtn, .signupbtn {
+  float: left;
+  width: 50%;
+}
+
+/* Add padding to container elements */
+.container {
+  padding: 16px;
+}
+
+/* Clear floats */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Change styles for cancel button and signup button on extra small screens */
+@media screen and (max-width: 300px) {
+  .cancelbtn, .signupbtn {
+     width: 100%;
+  }
+}
+</style>
+<body>
+
+<form action="/action_page.php" style="border:1px solid #ccc">
+  <div class="container">
+    <h1>Prijava</h1>
+    <hr>
+    <label for="inputUsername" class="sr-only">Uporabniško ime</label>
+    <input type="username" id="inputUsername" class="form-control" placeholder="Uporabnisko ime" name="Uporabnisko_ime" value = "{{uporabnisko_ime}}">
+
+    <label for="inputPassword" class="sr-only">Geslo</label>
+    <input type="password" id="inputPassword1" class="form-control" placeholder="Geslo" name="Geslo" value = "{{geslo}}" required>
+    
+
+    <div class="clearfix">
+      <button type="submit" class="signupbtn">Prijava</button>
+      <a class="btn btn-lg btn-primary btn-block" href="/registracija/">Registracija</a>
+    </div>
+  </div>
+</form>
+
+</body>
+</html>-->
