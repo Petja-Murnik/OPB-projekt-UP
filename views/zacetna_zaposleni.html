@@ -4,7 +4,7 @@
     <a href="/" class="myButton" >Začetna stran </a>
 </div>
 
-%if v != delavec:
+%if v != "delavec":
 <div class="container">
     <a href="/produkti/" class="myButton" >Produkti</a>
 </div>
@@ -15,7 +15,7 @@
     <a href="/prodani_produkti/" class="myButton" >Prodani produkti</a>
 %end
 
-% if v == "vodja oddelka"    
+% if v == "vodja oddelka":  
 <div class="container">
     <a href="/place/" class="myButton" >Plače</a>
 </div>
