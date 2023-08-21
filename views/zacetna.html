@@ -1,132 +1,71 @@
 %rebase('osnova.html', naslov='Petika')
+
 <html>
 <head>
-<title>CSS Template</title>
-<meta charset="utf-8">
+<title>W3.CSS Template</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <style>
-    .button {
-  display: inline-block;
-  padding: 15px 25px;
-  font-size: 24px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
-  color: #fff;
-  background-color: #ea987f;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 9px #999;
-}
-
-.button:hover {background-color: #999}
-
-.button:active {
-  background-color: #999;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
-    body {
-  background-image: url('ozadje.jpg');
-  background-repeat: no-repeat;
-  background-attachment: fixed;  
-  background-size: cover;
-}
-* {
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Style the header */
-header {
-  background-color: #b49860;
-  padding: 30px;
-  text-align: center;
-  font-size: 35px;
-  color: rgb(100, 43, 43);
-}
-
-/* Create two columns/boxes that floats next to each other */
-nav {
-  float: left;
-  width: 30%;
-  height: 300px; /* only for demonstration, should be removed */
-  background: #ccc;
-  padding: 20px;
-}
-
-/* Style the list inside the menu */
-nav ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-article {
-  float: left;
-  padding: 20px;
-  width: 70%;
-  background-color: #f1f1f1;
-  height: 300px; /* only for demonstration, should be removed */
-}
-
-/* Clear floats after the columns */
-section::after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Style the footer */
-footer {
-  background-color: #b49860;
-  padding: 10px;
-  text-align: center;
-  color: rgb(100, 43, 43);
-}
-
-/* Responsive layout - makes the two columns/boxes stack on top of each other instead of next to each other, on small screens */
-@media (max-width: 600px) {
-  nav, article {
-    width: 100%;
-    height: auto;
-  }
+body {font-family: "Times New Roman", Georgia, Serif;}
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Playfair Display";
+  letter-spacing: 5px;
 }
 </style>
 </head>
 <body>
 
-<header>
-  <h2>Petika</h2>
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
+    <a href="/" class="w3-bar-item w3-button">Začetna stran</a>
+    <!-- Right-sided navbar links. Hide them on small screens -->
+    <div class="w3-right w3-hide-small">
+      <a href="/prijava/" class="w3-bar-item w3-button">Prijava</a>
+      <a href="/nakupuj/" class="w3-bar-item w3-button">Nakupuj</a>
+      <a href="/zacetna_zaposleni/" class="w3-bar-item w3-button">Stran za zaposlene</a>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="max-width:1600px;min-width:500px" id="home">
+  <img class="w3-image" src="psi.jpg" alt="psi" width="1600" height="800">
+  <div class="w3-display-bottomleft w3-padding-large w3-opacity">
+    <h1 class="w3-xxlarge">Petika</h1>
+  </div>
 </header>
 
-<section>
-  <nav>
-    <ul>
-      <li><a href="/prijava/">Prijava</a></li>
-      
-    </ul>
-  </nav>
+<!-- Page content -->
+<div class="w3-content" style="max-width:1100px">
+
+  <!-- About Section -->
+  <div class="w3-row w3-padding-64" id="about">
+    <div class="w3-col m6 w3-padding-large w3-hide-small">
+     <img src="mops.jpg" class="w3-round w3-image w3-opacity-min" alt="Table Setting" width="600" height="750">
+    </div>
+
+    <div class="w3-col m6 w3-padding-large">
+      <h1 class="w3-center">Nekaj besed o nas</h1><br>
+      <h5 class="w3-center">OPB projekt</h5>
+      <p class="w3-large">Smo Petja, Tilen in Urška in smo ustanovili trgovino Petika, kjer lahko nakupujete za svoje najljubše hišne ljubljenčke, ali pa si tu izberete svojega!</p>
+    </div>
+  </div>
   
 
+  <!-- Contact Section -->
+  <div class="w3-container w3-padding-64" id="contact">
+    <h1>Kontakti</h1><br>
+    <p>Napa trgovina se nahaja na naslednjem naslovu:</p>
+    <p class="w3-text-blue-grey w3-large"><b>Petika, Jadranska cesta 43, 1000 Ljubljana</b></p>
+    <p>Dostopni pa smo tudi na telefonski številki 080 234 145 ali na elektronskem naslovu petika@gmail.com</p>
+  </div>
+  
+<!-- End page content -->
+</div>
 
-  <article>
-    <p>Opišemo trgovino Petika kaj ponujamo ipd</p>
-    <a href="/produkti/" class="button" >Produkti</a>
-    <a href="/prodani_produkti/" class="button" >Prodani produkti</a>
-    <a href="/nakupuj/" class="button" >Nakupuj</a>
-
-
-
-  </article>
-</section>
-
-<footer>
-  <a href="/zacetna_zaposleni/">Stran za zaposlene</a>
-</footer>
 
 </body>
 </html>
+
