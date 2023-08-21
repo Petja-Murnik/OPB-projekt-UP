@@ -1,36 +1,53 @@
 %rebase('osnova.html', naslov='Komitenti banke')
 
-<div class="container">
-    <a href="/" class="myButton" >Začetna stran </a>
+
+<div class="w3-top">
+    <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
+      <a href="/" class="w3-bar-item w3-button">Začetna stran</a>
+      <!-- Right-sided navbar links. Hide them on small screens -->
+      <div class="w3-right w3-hide-small">
+        %if v != "delavec":
+            <a href="/produkti/" class="w3-bar-item w3-button">Produkti</a>
+        %end
+        %if v is not None:
+            <a href="/prodani_produkti/" class="w3-bar-item w3-button">Prodani produkti</a>
+        %end
+        % if v == "vodja oddelka":  
+            <a href="/place/" class="w3-bar-item w3-button" >Plače</a>
+        %end
+        %if v !=  "delavec" and v is not None:
+            <a href="/zaposleni/" class="w3-bar-item w3-button" >Zaposleni</a>
+        %end
+            <a href="/prijava_zaposleni/" class="w3-bar-item w3-button" >Prijava zaposleni</a>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Header -->
+<header class="w3-display-container w3-content w3-wide" style="max-width:1600px;min-width:500px" id="home">
+    <img class="w3-image" src="\static\psi.jpg" alt="psi" width="1000" height="400">
+    <div class="w3-display-center w3-padding-large w3-opacity">
+      <h1 class="w3-xxlarge">Stran za zaposlene</h1>
+    </div>
+  </header>
+
+<div class="w3-content" style="max-width:1100px">
+  <div class="w3-col m6 w3-padding-large w3-hide-small">
+    <img src="\static\mops.jpg" class="w3-round w3-image w3-opacity-min" alt="Table Setting" width="600" height="750">
+   </div>
 </div>
 
-%if v != "delavec":
-<div class="container">
-    <a href="/produkti/" class="myButton" >Produkti</a>
-</div>
-%
 
-%if v is not None:
-<div class="container">
-    <a href="/prodani_produkti/" class="myButton" >Prodani produkti</a>
-%end
+   <div class="w3-col m6 w3-padding-large">
 
-% if v == "vodja oddelka":  
-<div class="container">
-    <a href="/place/" class="myButton" >Plače</a>
-</div>
-%end
+    <p class="w3-large">Spoštovani zaposleni, zgoraj v zgornjem navigacijskem meniju se lahko sprehajati po spletni strani namenjeni za vas.</p>
+  </div>
 
-%if v !=  "delavec" and v is not None:
-<div class="container">
-    <a href="/zaposleni/" class="myButton" >Zaposleni</a>
-</div>
-%end
+  
 
-<div class="container">
-    <a href="/prijava_zaposleni/" class="myButton" >Prijava zaposleni</a>
-</div>
 
-Dodati moramo odjavo zaposleni
+
+
 
 
