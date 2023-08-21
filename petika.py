@@ -532,16 +532,17 @@ def registracija_post():
         
 
 
-# @get('/odjava')
-# def odjava():
-#     """
-#     Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
-#     """
+@get('/odjava')
+def odjava():
+    """
+    Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
+    """
     
-#     response.delete_cookie("uporabnik")
-#     response.delete_cookie("rola")
+    response.delete_cookie("uporabnisko_ime")
+    response.delete_cookie("vloga")
+    response.delete_cookie("kosarica")
     
-#     return template('prijava.html', napaka=None)
+    return redirect('/')
 
 
 
