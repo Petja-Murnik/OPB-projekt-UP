@@ -1,0 +1,8 @@
+#!/bin/bash
+export BOTTLE_PORT=8080
+export BOTTLE_RELOADER=1
+export BOTTLE_ROOT=${JUPYTERHUB_SERVICE_PREFIX}proxy/${BOTTLE_PORT}/
+export petika.py=app.py
+export POSTGRES_PORT=443
+python ${petika.py} &
+exec "$@"
