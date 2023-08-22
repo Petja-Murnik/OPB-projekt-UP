@@ -1,7 +1,3 @@
-bottleext
-bottle
-functools
-uvoz
 psycopg2
 psycopg2.extensions
 psycopg2.extras
