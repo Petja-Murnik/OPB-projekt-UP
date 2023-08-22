@@ -3,3 +3,4 @@ os
 psycopg2-binary
 bottle
 jupyter-server-proxy
+hashlib
