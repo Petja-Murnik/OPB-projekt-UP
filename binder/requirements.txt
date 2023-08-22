@@ -2,3 +2,6 @@ psycopg2
 hashlib
 pickle
 os
+psycopg2-binary
+bottle
+jupyter-server-proxy
