@@ -1,6 +1,4 @@
 psycopg2
-psycopg2.extensions
-psycopg2.extras
 os
 hashlib
 pickle
