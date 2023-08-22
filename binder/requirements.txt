@@ -1,18 +1,12 @@
-# uvozimo bottle.py
-from bottleext import get, post, run, request, template, redirect, static_file, url
-from bottle import response
 
-#za cookieje
-from functools import wraps
-# uvozimo ustrezne podatke za povezavo
-from uvoz import auth_public as auth
-
-# uvozimo psycopg2
-import psycopg2, psycopg2.extensions, psycopg2.extras
-psycopg2.extensions.register_type(psycopg2.extensions.UNICODE) # se znebimo problemov s šumniki
-
-import os
-import hashlib
-
-import pickle
-from datetime import date
+frbottleext
+bottle
+functools
+uvoz
+psycopg2
+psycopg2.extensions
+psycopg2.extras
+os
+hashlib
+pickle
+datetime
