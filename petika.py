@@ -533,7 +533,8 @@ def registracija_post():
                     (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo1))
         conn.commit()
         response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
-        print("juhuhu")#neki   
+        print("juhuhu")#neki
+    return redirect('/')
 
         
 
