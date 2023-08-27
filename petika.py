@@ -135,17 +135,17 @@ def dodaj_zaposlenega_post():
     if vlogica == "delavec" or vlogica =="vodja izmene":
         return template("nimas_dovoljenja.html")
     else:
-        ime = request.forms.get('Ime')
-        priimek = request.forms.get('Priimek')
-        mesto = request.forms.get('Mesto')
-        naslov = request.forms.get('Naslov')
-        trr = request.forms.get('TRR')
-        uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-        geslo = request.forms.get('Geslo')
-        placa = request.forms.get('Placa')
-        st_ur = request.forms.get('Stevilo_ur')
-        vloga = request.forms.get('Vloga')
-        oddelek = request.forms.get('Oddelek')
+        ime = request.forms.getunicode('Ime')
+        priimek = request.forms.getunicode('Priimek')
+        mesto = request.forms.getunicode('Mesto')
+        naslov = request.forms.getunicode('Naslov')
+        trr = request.forms.getunicode('TRR')
+        uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
+        geslo = request.forms.getunicode('Geslo')
+        placa = request.forms.getunicode('Placa')
+        st_ur = request.forms.getunicode('Stevilo_ur')
+        vloga = request.forms.getunicode('Vloga')
+        oddelek = request.forms.getunicode('Oddelek')
     try: 
         cur.execute("""INSERT INTO zaposleni 
             (ime, priimek, mesto, naslov,TRR,uporabnisko_ime,
@@ -218,16 +218,16 @@ def uredi_zaposlenega_post(trr):
     else:
         try:
             # Preberemo vse podatke iz POST zahteve
-            ime = request.forms.get('Ime')
-            priimek = request.forms.get('Priimek')
-            mesto = request.forms.get('Mesto')
-            naslov = request.forms.get('Naslov')
-            uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-            geslo = request.forms.get('Geslo')
-            placa = request.forms.get('Placa')
-            st_ur = request.forms.get('Stevilo_ur')
-            vloga = request.forms.get('Vloga')
-            oddelek = request.forms.get('Oddelek')
+            ime = request.forms.getunicode('Ime')
+            priimek = request.forms.getunicode('Priimek')
+            mesto = request.forms.getunicode('Mesto')
+            naslov = request.forms.getunicode('Naslov')
+            uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
+            geslo = request.forms.getunicode('Geslo')
+            placa = request.forms.getunicode('Placa')
+            st_ur = request.forms.getunicode('Stevilo_ur')
+            vloga = request.forms.getunicode('Vloga')
+            oddelek = request.forms.getunicode('Oddelek')
 
 
             # Izvedemo SQL poizvedbo za posodobitev podatkov o zaposlenem, če je kaj spremenjeno
@@ -257,7 +257,8 @@ def uredi_zaposlenega_post(trr):
             conn.rollback()
             logging.exception("Napaka pri urejanju zaposlenega:")
             return "Zgodila se je napaka: %s" % ex
-        return redirect(url("zaposleni_get"))
+        redirect(url("zaposleni_get"))
+
 
 
 
@@ -295,8 +296,8 @@ def place():
 #         print("TI pa ne smes HAHA")
 #     else:
 #         print(moja_vloga)
-#         trr = request.forms.get("TRR")
-#         nova_placa = request.forms.get("Nova placa")
+#         trr = request.forms.getunicode("TRR")
+#         nova_placa = request.forms.getunicode("Nova placa")
 #     try:
 #         cur.execute("""UPDATE zaposleni
 #             SET placa = %s
@@ -428,8 +429,8 @@ def prijava_zaposleni_get():
 
 @post('/prijava_zaposleni/')
 def prijava_zaposleni_post():
-    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-    geslo = request.forms.get('Geslo')
+    uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
+    geslo = request.forms.getunicode('Geslo')
     if uporabnisko_ime is None or geslo is None:
         redirect(url(''))      
     oseba = cur   
@@ -473,8 +474,8 @@ def prijava_get():
 
 @post('/prijava/')
 def prijava_post():
-    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-    geslo = request.forms.get('Geslo')
+    uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
+    geslo = request.forms.getunicode('Geslo')
     if uporabnisko_ime is None or geslo is None:
         redirect(url(''))      
     oseba = cur   
@@ -512,14 +513,14 @@ def registracija_get():
 
 @post('/registracija/')
 def registracija_post():
-    uporabnisko_ime = request.forms.get('Uporabnisko_ime')
-    geslo1 = request.forms.get('Geslo1')
-    geslo2 = request.forms.get('Geslo2')
-    ime = request.forms.get('Ime')
-    priimek = request.forms.get('Priimek')
-    naslov = request.forms.get('Naslov')
-    trr = request.forms.get('TRR')
-    mesto = request.forms.get("Mesto")
+    uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
+    geslo1 = request.forms.getunicode('Geslo1')
+    geslo2 = request.forms.getunicode('Geslo2')
+    ime = request.forms.getunicode('Ime')
+    priimek = request.forms.getunicode('Priimek')
+    naslov = request.forms.getunicode('Naslov')
+    trr = request.forms.getunicode('TRR')
+    mesto = request.forms.getunicode("Mesto")
     cur.execute("SELECT * FROM kupci WHERE uporabnisko_ime = %s", [uporabnisko_ime])
     if cur.fetchone():
         print('ime že zasedeno')
@@ -533,7 +534,8 @@ def registracija_post():
                     (ime, priimek, naslov, mesto, trr, uporabnisko_ime, geslo1))
         conn.commit()
         response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
-        print("juhuhu")#neki   
+        print("juhuhu")#neki
+    redirect('/')
 
         
 
@@ -548,7 +550,7 @@ def odjava():
     response.delete_cookie("vloga")
     response.delete_cookie("kosarica")
     
-    return redirect('/')
+    redirect('/')
 
 
 
@@ -559,8 +561,8 @@ def odjava():
 #     if False:
 #         "pri produktih je nekaj narobe"
 #     else:
-#         prodajna_cena = int(request.forms.get('prodajna_cena'))
-#         ime_produkt = str(request.forms.get('ime_produkt'))
+#         prodajna_cena = int(request.forms.getunicode('prodajna_cena'))
+#         ime_produkt = str(request.forms.getunicode('ime_produkt'))
 #     redirect(url('dodaj_get'))
 
 #potrbujemo nakupuj-sesznam vseh izdelkov klikneš nanga in da v košarico.
@@ -586,9 +588,9 @@ def dodaj_v_kosarico():
     else:
         kosarica = json.loads(kosarica)
     
-    prodajna_cena = request.forms.get('prodajna_cena')
-    ime_produkt = request.forms.get('ime_produkt')
-    kolicina = request.forms.get('kolicina')
+    prodajna_cena = request.forms.getunicode('prodajna_cena')
+    ime_produkt = request.forms.getunicode('ime_produkt')
+    kolicina = request.forms.getunicode('kolicina')
     kosarica[ime_produkt] = (prodajna_cena, kolicina)
     kosarica_str = json.dumps(kosarica)
     response.set_cookie("kosarica", value=kosarica_str)
@@ -604,7 +606,7 @@ def odstrani_iz_kosarice():
     else:
         kosarica = json.loads(kosarica)
 
-    ime_prod = request.forms.get('ime_prod')
+    ime_prod = request.forms.getunicode('ime_prod')
     del kosarica[ime_prod]
     kosarica_str = json.dumps(kosarica)
     print(kosarica_str)

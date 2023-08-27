@@ -18,22 +18,31 @@
 
 <form action="{{url('registracija_post')}}" method="POST">
     <h1 class="h3 mb-3 font-weight-normal">Registracija</h1>
+    
     <label for="uporabnisko_ime" class="form-label my-3">Uporabniško ime:</label>
     <input id="uporabnisko_ime" name="Uporabnisko_ime" type="text" value="{{uporabnisko_ime}}" required />
+    
     <label for="geslo" class="form-label my-3">Geslo:</label>
-    <input id="geslo" name="Geslo1" type="text" value="{{geslo1}}" required />
+    <input id="geslo" name="Geslo1" type="password" value="{{geslo1}}" required />
+    
     <label for="geslo" class="form-label my-3">Ponovi geslo:</label>
-    <input id="geslo" name="Geslo2" type="text" value="{{geslo2}}" required />
+    <input id="geslo" name="Geslo2" type="password" value="{{geslo2}}" required />
+    
     <label for="ime" class="form-label my-3">Ime:</label>
     <input id="ime" name="Ime" type="text" value="{{ime}}" required />
+    
     <label for="priimek" class="form-label my-3">Priimek:</label>
     <input id="priimek" name="Priimek" type="text" value="{{priimek}}" required />
+    
     <label for="naslov" class="form-label my-3">Naslov:</label>
     <input id="naslov" name="Naslov" type="text" value="{{naslov}}" required />
+    
     <label for="mesto" class="form-label my-3">Mesto:</label>
     <input id="mesto" name="Mesto" type="text" value="{{mesto}}" required />
+    
     <label for="trr" class="form-label my-3">TRR:</label>
     <input id="trr" name="TRR" type="text" value="{{trr}}" required />
+    
     <button class="btn btn-lg btn-primary btn-block" type="submit">Potrdi</button>
 </form>
 </body>
