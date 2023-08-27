@@ -38,7 +38,7 @@
  color: white;
 }
 </style>
-<a href="{{url('zaposleni_get')}}" class="myButton" >Nazaj </a>
+<a href="{{url('zacetna_zaposleni_get')}}" class="myButton" >Nazaj </a>
 
 
 
@@ -72,9 +72,7 @@
      </tr>
    %end    
 </table>
-"{{url('produkti_uredi', id_produkt = id_produkt)}}"
 
 %if v == "vodja oddelka":
   <a href="{{url('dodaj_zaposlenega_get')}}" class="myButton" >Dodaj zaposlenega</a>
 %end
-
