@@ -7,18 +7,18 @@
       <!-- Right-sided navbar links. Hide them on small screens -->
       <div class="w3-right w3-hide-small">
         %if v != "delavec":
-            <a href="/produkti/" class="w3-bar-item w3-button">Produkti</a>
+            <a href="{{url('produkti')}}" class="w3-bar-item w3-button">Produkti</a>
         %end
         %if v is not None:
-            <a href="/prodani_produkti/" class="w3-bar-item w3-button">Prodani produkti</a>
+            <a href="{{url('produkti_prodani_get')}}" class="w3-bar-item w3-button">Prodani produkti</a>
         %end
         % if v == "vodja oddelka":  
-            <a href="/place/" class="w3-bar-item w3-button" >Plače</a>
+            <a href="{{url('place')}}" class="w3-bar-item w3-button" >Plače</a>
         %end
         %if v !=  "delavec" and v is not None:
-            <a href="/zaposleni/" class="w3-bar-item w3-button" >Zaposleni</a>
+            <a href="{{url('zaposleni_get')}}" class="w3-bar-item w3-button" >Zaposleni</a>
         %end
-            <a href="/prijava_zaposleni/" class="w3-bar-item w3-button" >Prijava zaposleni</a>
+            <a href="{{url('prijava_zaposleni_get')}}" class="w3-bar-item w3-button" >Prijava zaposleni</a>
       </div>
     </div>
   </div>

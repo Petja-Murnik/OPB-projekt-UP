@@ -10,7 +10,7 @@
 <body>
 %rebase('osnova.html', naslov='Registracija')
 
-<a href="/" class="myButton" >Nazaj </a>
+<a href="{{url('index')}}" class="myButton" >Nazaj </a>
 
 %if napaka:
   <p class="opozorilo">{{napaka}}</p>

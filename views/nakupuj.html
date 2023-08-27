@@ -36,7 +36,7 @@ css
  <div class="table-container">
    <div class ="table-left">
 <table cellpadding="0" cellspacing="0" border="1" id="customers" >
-   <a href="/" class="myButton" >Nazaj </a>
+   <a href=""{{url('index')}}"" class="myButton" >Nazaj </a>
     <tr>
         <th>Prodajna cena produkta</th>
         <th>Ime produkta</th>
@@ -87,9 +87,9 @@ css
       <td>Vsota:</td>
       <td>{{sum}}</td>
    % if prijavljen:
-      <a href="/zakljuci_nakup">zakljuci nakup</a>
+      <a href="{{url('zakljuci_nakup')}}">zakljuci nakup</a>
    % else:
-      za nakup se je treba prijaviti
+      Za nakup se je treba prijaviti
    % end
    </tr>
    <tr>

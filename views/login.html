@@ -11,7 +11,7 @@
 
 
 <body>
-<a href="/" class="myButton" >Nazaj </a>
+<a href="{{url('index')}}" class="myButton" >Nazaj </a>
 
 %if napaka2:
   <p class="opozorilo">{{napaka2}}</p>
@@ -26,7 +26,7 @@
   
 
 <button class="btn btn-lg btn-primary btn-block" type="submit">Prijava</button>
-<a class="btn btn-lg btn-primary btn-block" href="/registracija/">Registracija</a>
+<a class="btn btn-lg btn-primary btn-block" href="{{url('registracija_get')}}">Registracija</a>
 
 
 </form>
