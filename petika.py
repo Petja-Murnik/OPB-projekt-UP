@@ -263,6 +263,7 @@ def uredi_zaposlenega_post(trr):
 
 
 
+
 @get("/place/")
 @cookie_required_zaposlen_uporabnisko_ime
 @cookie_required_zaposlen_vloga

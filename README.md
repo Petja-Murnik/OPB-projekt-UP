@@ -11,3 +11,4 @@ Naredili bomo aplikacijo za spletno trgovino Petika, ki bo različnim uporabniko
 
 Povezava do binderja:
 https://mybinder.org/v2/gh/Petja-Murnik/OPB-projekt-UP/main?urlpath=proxy%2F8080
+
