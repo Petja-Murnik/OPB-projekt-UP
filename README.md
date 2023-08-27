@@ -9,6 +9,5 @@ Naredili bomo aplikacijo za spletno trgovino Petika, ki bo različnim uporabniko
 
 ![diagram](OPB_ER_diagram_projekt.png)
 
-Povezava do binderja:
-https://mybinder.org/v2/gh/Petja-Murnik/OPB-projekt-UP/main?urlpath=proxy%2F8080
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Petja-Murnik/OPB-projekt-UP/main?urlpath=proxy%2F8080)
 
