@@ -16,7 +16,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODE) # se znebimo prob
 
 import os
 import hashlib
-
+import json
 import pickle
 from datetime import date
 
@@ -572,7 +572,7 @@ def nakupuj_get():
     if kosarica is None:
         kosarica = {}
     else:
-        kosarica = eval(kosarica)
+        kosarica = json.loads(kosarica)
     
     print(request.get_cookie("uporabnisko_ime"))
     prijavljen = False if request.get_cookie("uporabnisko_ime") is None else True
@@ -584,13 +584,13 @@ def dodaj_v_kosarico():
     if kosarica is None:
         kosarica = {}
     else:
-        kosarica = eval(kosarica)
+        kosarica = json.loads(kosarica)
     
     prodajna_cena = request.forms.get('prodajna_cena')
     ime_produkt = request.forms.get('ime_produkt')
     kolicina = request.forms.get('kolicina')
     kosarica[ime_produkt] = (prodajna_cena, kolicina)
-    kosarica_str = str(kosarica)
+    kosarica_str = json.dumps(kosarica)
     response.set_cookie("kosarica", value=kosarica_str)
     cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
     rows = cur.fetchall()
@@ -602,11 +602,11 @@ def odstrani_iz_kosarice():
     if kosarica is None:
         kosarica = {}
     else:
-        kosarica = eval(kosarica)
+        kosarica = json.loads(kosarica)
 
     ime_prod = request.forms.get('ime_prod')
     del kosarica[ime_prod]
-    kosarica_str = str(kosarica)
+    kosarica_str = json.dumps(kosarica)
     print(kosarica_str)
     response.set_cookie("kosarica", value=kosarica_str)
     cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
@@ -620,7 +620,7 @@ def zakljuci_nakup():
     if kosarica is None:
         return template("nakup_zakljucen_napaka.html")
     else:
-        kosarica = eval(kosarica)
+        kosarica = json.loads(kosarica)
 
     for produkt in kosarica.items():
         print(f"Dodajanje {len(kosarica.items())} produktov...")
