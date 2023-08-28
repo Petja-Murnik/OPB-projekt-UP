@@ -5,7 +5,7 @@ import psycopg2, psycopg2.extensions, psycopg2.extras
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE) # se znebimo problemov s šumniki
 
 import csv
-
+import hashlib
 import pandas as pd
 
 conn = psycopg2.connect(database=auth.db, host=auth.host, user=auth.user, password=auth.password)
@@ -250,3 +250,51 @@ def pomoc():
 #pomoc()    
 
 #pip install openpyxl
+##############Za spreminjanje gesel v tabeli kupci
+def password_hash(s):
+    """Vrni SHA-512 hash danega UTF-8 niza. Gesla vedno spravimo v bazo
+       kodirana s to funkcijo."""
+    h = hashlib.sha512()
+    h.update(s.encode('utf-8'))
+    return h.hexdigest()
+
+def pomoc_hash():
+    cur.execute("SELECT * FROM kupci")
+    rows = cur.fetchall()
+    for row in rows:
+        trr  = row[4]
+        staro_geslo = row[6]
+        novo_geslo = password_hash(staro_geslo) 
+        cur.execute("UPDATE kupci SET geslo = %s WHERE trr = %s" , (novo_geslo, trr))
+        print(novo_geslo , staro_geslo)
+    conn.commit()     
+
+# pomoc_hash()
+# print(password_hash("pb4CbuMIXf1F"))
+
+def pomoc_hash_zaposleni():
+    cur.execute("SELECT * FROM zaposleni")
+    rows = cur.fetchall()
+    for row in rows:
+        trr  = row[4]
+        staro_geslo = row[6]
+        novo_geslo = password_hash(staro_geslo)
+        cur.execute("UPDATE zaposleni SET geslo = %s WHERE trr = %s" , (novo_geslo, trr))
+        print(novo_geslo , staro_geslo) 
+    conn.commit()
+#pomoc_hash_zaposleni()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

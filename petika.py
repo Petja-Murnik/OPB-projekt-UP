@@ -34,6 +34,14 @@ import logging
 
 #za debugiranje
 #debug(True)
+#za hashiranje gesel
+def password_hash(s):
+    """Vrni SHA-512 hash danega UTF-8 niza. Gesla vedno spravimo v bazo
+       kodirana s to funkcijo."""
+    h = hashlib.sha512()
+    h.update(s.encode('utf-8'))
+    return h.hexdigest()
+
 
 #POMOŽNA KODA ZA COOKIE##################################################
 def cookie_required_kupec(f):
@@ -430,7 +438,7 @@ def prijava_zaposleni_get():
 @post('/prijava_zaposleni/')
 def prijava_zaposleni_post():
     uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
-    geslo = request.forms.getunicode('Geslo')
+    geslo = password_hash(request.forms.getunicode('Geslo'))
     if uporabnisko_ime is None or geslo is None:
         redirect(url(''))      
     oseba = cur   
@@ -475,7 +483,7 @@ def prijava_get():
 @post('/prijava/')
 def prijava_post():
     uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
-    geslo = request.forms.getunicode('Geslo')
+    geslo = password_hash(request.forms.getunicode('Geslo'))
     if uporabnisko_ime is None or geslo is None:
         redirect(url(''))      
     oseba = cur   
@@ -514,8 +522,8 @@ def registracija_get():
 @post('/registracija/')
 def registracija_post():
     uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
-    geslo1 = request.forms.getunicode('Geslo1')
-    geslo2 = request.forms.getunicode('Geslo2')
+    geslo1 = password_hash(request.forms.getunicode('Geslo1'))
+    geslo2 = password_hash(request.forms.getunicode('Geslo2'))
     ime = request.forms.getunicode('Ime')
     priimek = request.forms.getunicode('Priimek')
     naslov = request.forms.getunicode('Naslov')
@@ -632,6 +640,20 @@ def zakljuci_nakup():
     
 
     return template("nakup_zakljucen.html")
+
+#Funkcija da vse gesla v tabeli zaposleni ter vse gesla v tabeli kupci update s funkcijo 
+# hash neki tako da bodo gesla hashirana 
+
+
+
+
+
+
+
+
+
+
+
 
 #TO MORE BITI TUKAJ SPODAJ KODO PIŠI VIŠJE !!!
 # poženemo strežnik na podanih vratih, npr. http://localhost:8080/
