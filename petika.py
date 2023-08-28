@@ -86,10 +86,6 @@ def cookie_required_zaposlen_vloga(f):
         if cookie:
             return f(*args, **kwargs)
         return template("prijava_zaposleni.html",uporabnisko_ime = "", geslo = "",napaka2  = None)
-
-    
-        
-        
     return decorated
 
 #######################################################################################################KONEC COOKIE
@@ -168,7 +164,7 @@ def dodaj_zaposlenega_post():
         conn.rollback()
         return template('dodaj_zaposlenega.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
                          uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= 'Zgodila se je napaka: %s' % ex)
-    redirect(url("zaposleni_get"))
+    return redirect(url("zaposleni_get"))
 
 @get("/uredi_zaposlenega/<trr>")
 @cookie_required_zaposlen_uporabnisko_ime
@@ -265,7 +261,7 @@ def uredi_zaposlenega_post(trr):
             conn.rollback()
             logging.exception("Napaka pri urejanju zaposlenega:")
             return "Zgodila se je napaka: %s" % ex
-        redirect(url("zaposleni_get"))
+        return redirect(url("zaposleni_get"))
 
 
 
@@ -384,7 +380,7 @@ def produkti_dodaj_post():
         nabavna_cena = request.forms.getunicode('nabavna_cena')
         ime_produkt = request.forms.getunicode('ime_produkt')
         cur.execute("INSERT INTO produkti (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) VALUES (%s, %s, %s, %s)", (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
-        redirect(url('produkti'))
+        return redirect(url('produkti'))
 
 @get('/produkti/uredi/<id_produkt>')
 @cookie_required_zaposlen_uporabnisko_ime
@@ -543,7 +539,7 @@ def registracija_post():
         conn.commit()
         response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
         print("juhuhu")#neki
-    redirect('/')
+    return redirect('/')
 
         
 
@@ -553,12 +549,10 @@ def odjava():
     """
     Odjavi uporabnika iz aplikacije. Pobriše piškotke o uporabniku in njegovi roli.
     """
-    
     response.delete_cookie("uporabnisko_ime")
     response.delete_cookie("vloga")
     response.delete_cookie("kosarica")
-    
-    redirect('/')
+    return redirect('/')
 
 
 
