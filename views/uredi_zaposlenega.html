@@ -3,7 +3,7 @@
 <a href="{{url('zaposleni_get')}}" class="myButton" >Nazaj </a>
 
 <h2>Uredi zaposlenega</h2>
-    <form action="/uredi_zaposlenega/{{ trr }}" method="post">
+    <form action="{{url('uredi_zaposlenega_get', trr = trr)}}" method="post">
         <label for="Ime">Ime:</label>
         <input type="text" name="Ime" value="{{ ime }}" required><br>
 
