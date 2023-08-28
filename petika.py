@@ -149,7 +149,7 @@ def dodaj_zaposlenega_post():
         naslov = request.forms.getunicode('Naslov')
         trr = request.forms.getunicode('TRR')
         uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
-        geslo = request.forms.getunicode('Geslo')
+        geslo = password_hash(request.forms.getunicode('Geslo'))
         placa = request.forms.getunicode('Placa')
         st_ur = request.forms.getunicode('Stevilo_ur')
         vloga = request.forms.getunicode('Vloga')
@@ -164,7 +164,7 @@ def dodaj_zaposlenega_post():
         cur.execute("""INSERT INTO vloge
             VALUES(%s,%s,%s);""",(trr, vloga,oddelek))
         conn.commit()
-    except Exception as ex:
+    except (psycopg2.IntegrityError, psycopg2.OperationalError, ValueError, TypeError) as ex:
         conn.rollback()
         return template('dodaj_zaposlenega.html',ime = "",priimek = '',mesto = '',naslov = '',trr = '',
                          uporabnisko_ime ='', geslo ='', placa = '', st_ur = '', vloga = '', oddelek ='',napaka= 'Zgodila se je napaka: %s' % ex)
@@ -206,12 +206,12 @@ def uredi_zaposlenega_get(trr):
 
                 # Prikazujemo obrazec za urejanje z že obstoječimi podatki
                 return template("uredi_zaposlenega.html", ime=ime, priimek=priimek, mesto=mesto,
-                                naslov=naslov, trr=trr, uporabnisko_ime=uporabnisko_ime, geslo=geslo, placa=placa,
+                                naslov=naslov, trr=trr, uporabnisko_ime=uporabnisko_ime, geslo="", placa=placa,
                                 st_ur=st_ur, vloga=vloga, oddelek=id_oddelek)
             else:
                 # Zaposleni s podanim imenom ne obstaja, vrnejo lahko ustrezno sporočilo ali preusmerijo na drugo stran
                 return "Zaposleni s tem imenom ne obstaja."
-        except Exception as ex:
+        except (psycopg2.IntegrityError, psycopg2.OperationalError, ValueError, TypeError) as ex:
             print(ex)
             return "Zgodila se je napaka: %s" % ex
 
@@ -231,7 +231,7 @@ def uredi_zaposlenega_post(trr):
             mesto = request.forms.getunicode('Mesto')
             naslov = request.forms.getunicode('Naslov')
             uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
-            geslo = request.forms.getunicode('Geslo')
+            geslo = password_hash(request.forms.getunicode('Geslo'))
             placa = request.forms.getunicode('Placa')
             st_ur = request.forms.getunicode('Stevilo_ur')
             vloga = request.forms.getunicode('Vloga')
@@ -254,14 +254,14 @@ def uredi_zaposlenega_post(trr):
                 # Zaposleni ima že vnos v tabeli "vloge", izvedemo posodobitev
                 cur.execute("""UPDATE vloge SET vloga = %s, id_oddelek = %s WHERE trr = %s""",
                             (vloga, oddelek, trr))
+                conn.commit()
             else:
                 # Zaposleni še nima vnosa v tabeli "vloge", izvedemo vstavljanje novega vnosa
                 cur.execute("""INSERT INTO vloge (trr, vloga, id_oddelek) 
                                 VALUES (%s, %s, %s)""",
                             (trr, vloga, oddelek))
-
-            conn.commit()        
-        except Exception as ex:
+                conn.commit()        
+        except (psycopg2.IntegrityError, psycopg2.OperationalError, ValueError, TypeError) as ex:
             conn.rollback()
             logging.exception("Napaka pri urejanju zaposlenega:")
             return "Zgodila se je napaka: %s" % ex
@@ -448,7 +448,7 @@ def prijava_zaposleni_post():
         hashBaza = cur.fetchone()
         hashBaza = hashBaza[0]
         print("AA")
-    except:
+    except TypeError:
         hashBaza = None 
         print("BBB")
     if hashBaza is None:
@@ -493,7 +493,7 @@ def prijava_post():
         hashBaza = cur.fetchone()
         hashBaza = hashBaza[0]
         print("AA")
-    except:
+    except TypeError:
         hashBaza = None 
         print("BBB")
         #redirect na login
