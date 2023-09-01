@@ -189,7 +189,7 @@ def uredi_zaposlenega_get(trr):
                 priimek = zaposleni[1]
                 mesto = zaposleni[3]
                 naslov = zaposleni[2]
-                geslo = zaposleni[6]
+                #geslo = zaposleni[6]
                 placa = zaposleni[7]
                 st_ur = zaposleni[8]
                 vloga = vlogica[1]
@@ -202,7 +202,7 @@ def uredi_zaposlenega_get(trr):
 
                 # Prikazujemo obrazec za urejanje z že obstoječimi podatki
                 return template("uredi_zaposlenega.html", ime=ime, priimek=priimek, mesto=mesto,
-                                naslov=naslov, trr=trr, uporabnisko_ime=uporabnisko_ime, geslo="", placa=placa,
+                                naslov=naslov, trr=trr, uporabnisko_ime=uporabnisko_ime, placa=placa,
                                 st_ur=st_ur, vloga=vloga, oddelek=id_oddelek)
             else:
                 # Zaposleni s podanim imenom ne obstaja, vrnejo lahko ustrezno sporočilo ali preusmerijo na drugo stran
@@ -227,7 +227,7 @@ def uredi_zaposlenega_post(trr):
             mesto = request.forms.getunicode('Mesto')
             naslov = request.forms.getunicode('Naslov')
             uporabnisko_ime = request.forms.getunicode('Uporabnisko_ime')
-            geslo = password_hash(request.forms.getunicode('Geslo'))
+            #geslo = password_hash(request.forms.getunicode('Geslo'))
             placa = request.forms.getunicode('Placa')
             st_ur = request.forms.getunicode('Stevilo_ur')
             vloga = request.forms.getunicode('Vloga')
@@ -237,10 +237,10 @@ def uredi_zaposlenega_post(trr):
             # Izvedemo SQL poizvedbo za posodobitev podatkov o zaposlenem, če je kaj spremenjeno
             cur.execute("""UPDATE zaposleni SET
                 ime = %s, priimek = %s, mesto = %s, naslov = %s,
-                uporabnisko_ime = %s, geslo = %s, placa = %s,
+                uporabnisko_ime = %s,  placa = %s,
                 stevilo_ur = %s WHERE trr = %s""",
                 (ime, priimek, mesto, naslov, uporabnisko_ime,
-                geslo, placa, st_ur, trr))
+                 placa, st_ur, trr))
 
             # Preverimo, ali obstaja vnos za ta zaposleni v tabeli "vloge"
             cur.execute("SELECT * FROM vloge WHERE trr = %s", (trr,))
