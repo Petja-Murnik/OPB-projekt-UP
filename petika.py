@@ -543,7 +543,7 @@ def registracija_post():
         conn.commit()
         response.set_cookie("uporabnisko_ime", uporabnisko_ime, path="/")
         print("juhuhu")#neki
-    redirect('/')
+    redirect(url('/'))
 
         
 
@@ -558,7 +558,7 @@ def odjava():
     response.delete_cookie("vloga")
     response.delete_cookie("kosarica")
     
-    redirect('/')
+    redirect(url('/'))
 
 
 
