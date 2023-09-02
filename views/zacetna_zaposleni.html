@@ -1,4 +1,5 @@
 %rebase('osnova.html', naslov='Začetna stran zaposleni')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
 
 <div class="w3-top">
@@ -41,10 +42,9 @@
    <div class="w3-col m6 w3-padding-large">
 
     <p class="w3-large">Spoštovani zaposleni, v zgornjem navigacijskem meniju lahko izbirate med različnimi funkcijami, ki vam olajšajo vaše delo.</p>
-  </div>
-
-  <div class="w3-col m6 w3-padding-large">
-    <a href="{{url('odjava')}}"> Odjava</a>
+    <div class="w3-col m6 w3-padding-large">
+      <a button type="button" class="btn btn-dark" href="{{url('odjava')}}"> Odjava</a>
+    </div>
   </div>
 
   

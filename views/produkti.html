@@ -1,4 +1,5 @@
 % rebase('osnova.html', naslov='Produkti')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
 <style>
   .table-container {
@@ -33,13 +34,13 @@
  padding-top: 12px;
  padding-bottom: 12px;
  text-align: left;
- background-color: #04AA6D;
+ background-color: #1d79fb;
  color: white;
 }
 </style>
 
 <table cellpadding="0" cellspacing="0" border="1" id="customers">
-  <a href="{{url('zacetna_zaposleni_get')}}" class="myButton" >Nazaj </a>
+  <a button type="button" class="btn btn-outline-primary" href="{{url('zacetna_zaposleni_get')}}" class="myButton" >Nazaj </a>
    <tr>
       <th>Id. produkta</th>
       <th>Prodajna cena produkta</th>
@@ -54,16 +55,14 @@
      <td>{{nabavna_cena}}</td>
      <td>{{ime_produkt}}</td>
      <td class="myButton">
-       <form action="{{url('produkti_uredi', id_produkt = id_produkt)}}" method="GET">
-        <button type="submit">Uredi</button>
-       </form>
-       <form action="{{url('produkti_brisi', id_produkt = id_produkt)}}" method="POST">
-       <button type="submit">Izbriši</button>
-       </form>
-     </td>
+      <a button type="button" class="btn btn-outline-secondary" href="{{url('produkti_uredi', id_produkt = id_produkt)}}" method="GET">Uredi</a>
+    
+    <form action="{{url('produkti_brisi', id_produkt = id_produkt)}}" method="POST">
+      <button type="submit" class="btn btn-outline-danger">Izbriši</button>
+      </form>
+    </td>
    </tr>
    %end
  </table>
  %if True:
-
- <a href="{{url('produkti_dodaj')}}" class="myButton" >Dodaj produkt</a>
+ <a button type="button" class="btn btn-outline-primary" href="{{url('produkti_dodaj')}}" class="myButton" >Dodaj produkt</a>
