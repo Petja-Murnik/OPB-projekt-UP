@@ -6,7 +6,7 @@
     <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
       <a href="{{url('/')}}" class="w3-bar-item w3-button">Začetna stran</a>
       <!-- Right-sided navbar links. Hide them on small screens -->
-      <div class="w3-right w3-hide-small">
+      <div class="w3-center w3-hide-small">
         %if v != "delavec":
             <a href="{{url('produkti')}}" class="w3-bar-item w3-button">Produkti</a>
         %end
@@ -42,11 +42,11 @@
    <div class="w3-col m6 w3-padding-large">
 
     <p class="w3-large">Spoštovani zaposleni, v zgornjem navigacijskem meniju lahko izbirate med različnimi funkcijami, ki vam olajšajo vaše delo.</p>
-    <div class="w3-col m6 w3-padding-large">
-      <a button type="button" class="btn btn-dark" href="{{url('odjava')}}"> Odjava</a>
-    </div>
   </div>
 
+  <div class="w3-col m6 w3-padding-large">
+    <a button type="button" class="btn btn-dark" href="{{url('odjava')}}"> Odjava</a>
+  </div>
   
 
 
