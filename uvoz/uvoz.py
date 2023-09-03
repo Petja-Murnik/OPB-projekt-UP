@@ -284,6 +284,22 @@ def pomoc_hash_zaposleni():
     conn.commit()
 #pomoc_hash_zaposleni()
 
+def stvari_iz_produkti_v_nove():
+    cur.execute("SELECT * FROM produkti")
+    rows = cur.fetchall()
+    for row in rows:
+        prodajna_cena = row[1]
+        nabavna_cena = row[2]
+        ime_produkt = row[3]
+        print(f"nekie {prodajna_cena} neki {nabavna_cena} neki {ime_produkt}")
+        cur.execute("""INSERT INTO produkti_nova (prodajna_cena, nabavna_cena, ime_produkt)
+        VALUES (%s, %s, %s)""" , (prodajna_cena , nabavna_cena , ime_produkt))
+    conn.commit()
+
+stvari_iz_produkti_v_nove()    
+
+
+
 
 
 
