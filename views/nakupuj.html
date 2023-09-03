@@ -43,7 +43,7 @@ css
         <th>Ime produkta</th>
         
      </tr>
-     %for (prodajna_cena,ime_produkt) in produkti:
+     %for (prodajna_cena,ime_produkt) in produkti_nova:
      <tr>
         <td>{{prodajna_cena}}</td>
         <td>{{ime_produkt}}</td>
@@ -88,7 +88,7 @@ css
       <td>Vsota:</td>
       <td>{{sum}}</td>
    % if prijavljen:
-      <a button type="button" class="btn btn-outline-info" href="{{url('zakljuci_nakup')}}" class="myButton" >Nazaj </a>
+      <a button type="button" class="btn btn-outline-info" href="{{url('zakljuci_nakup')}}" class="myButton" >Zaključi nakup</a>
 
    % else:
       Za nakup se je treba prijaviti
