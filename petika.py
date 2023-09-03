@@ -340,14 +340,14 @@ def hashGesla(s):
 def produkti():
     uporabniski_imencek = request.get_cookie("uporabnisko_ime")
     vlogica = request.get_cookie("vloga")
-    cur.execute("SELECT * from produkti")
-    return template("produkti.html", produkti=cur)
+    cur.execute("SELECT * from produkti_nova")
+    return template("produkti.html", produkti_nova=cur)
 
 @get("/prodani_produkti/")
 @cookie_required_zaposlen_uporabnisko_ime
 def produkti_prodani_get():
     cur.execute("SELECT * from prodani_produkti")
-    return template("prodani_produkti.html", produkti=cur)
+    return template("prodani_produkti.html", produkti_nova=cur)
 
 # Pomozna metoda za brisanje prodanih produktov
 @post('/prodani_produkti/brisi/')
@@ -379,7 +379,7 @@ def produkti_dodaj_post():
         prodajna_cena = request.forms.getunicode('prodajna_cena')
         nabavna_cena = request.forms.getunicode('nabavna_cena')
         ime_produkt = request.forms.getunicode('ime_produkt')
-        cur.execute("INSERT INTO produkti (id_produkt, prodajna_cena, nabavna_cena, ime_produkt) VALUES (%s, %s, %s, %s)", (id_produkt, prodajna_cena, nabavna_cena, ime_produkt))
+        cur.execute("INSERT INTO produkti_nova (prodajna_cena, nabavna_cena, ime_produkt) VALUES ( %s, %s, %s)", (prodajna_cena, nabavna_cena, ime_produkt))
         return redirect(url('produkti'))
 
 @get('/produkti/uredi/<id_produkt>')
@@ -391,7 +391,7 @@ def produkti_uredi(id_produkt):
     if vlogica == "delavec" :
         return template("nimas_dovoljenja.html")
     else:
-        cur.execute("SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti WHERE id_produkt = %s", [id_produkt])
+        cur.execute("SELECT id_produkt, prodajna_cena, nabavna_cena, ime_produkt FROM produkti_nova WHERE id_produkt = %s", [id_produkt])
         res = cur.fetchone()
         if res is None:
             redirect(url('produkti'))
@@ -407,11 +407,10 @@ def produkti_uredi_post(id_produkt):
     if vlogica == "delavec" :
         return template("nimas_dovoljenja.html")
     else:
-        novi_id_produkt = request.forms.getunicode('id_produkt')
         prodajna_cena = request.forms.getunicode('prodajna_cena')
         nabavna_cena = request.forms.getunicode('nabavna_cena')
         ime_produkt = request.forms.getunicode('ime_produkt')
-        cur.execute("UPDATE produkti SET id_produkt = %s, prodajna_cena = %s, nabavna_cena = %s, ime_produkt = %s WHERE id_produkt = %s", [novi_id_produkt, prodajna_cena, nabavna_cena, ime_produkt, id_produkt])
+        cur.execute("UPDATE produkti_nova SET prodajna_cena = %s, nabavna_cena = %s, ime_produkt = %s WHERE id_produkt = %s", [prodajna_cena, nabavna_cena, ime_produkt, id_produkt])
         redirect(url('produkti'))
 
 @post('/produkti/brisi/<id_produkt>')
@@ -423,7 +422,7 @@ def produkti_brisi(id_produkt):
     if vlogica == "delavec" :
         return template("nimas_dovoljenja.html")
     else:
-        cur.execute("DELETE FROM produkti WHERE id_produkt = %s", [id_produkt])
+        cur.execute("DELETE FROM produkti_nova WHERE id_produkt = %s", [id_produkt])
         redirect(url('produkti'))
 
 ###################################################PRIJAVA zaposleni
@@ -571,7 +570,7 @@ def odjava():
 #potrbujemo nakupuj-sesznam vseh izdelkov klikneš nanga in da v košarico.
 @get("/nakupuj/")
 def nakupuj_get():
-    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
+    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti_nova")
     rows = cur.fetchall()
     kosarica = request.get_cookie("kosarica")
     if kosarica is None:
@@ -581,7 +580,7 @@ def nakupuj_get():
     
     print(request.get_cookie("uporabnisko_ime"))
     prijavljen = False if request.get_cookie("uporabnisko_ime") is None else True
-    return template("nakupuj.html", produkti=rows, kosarica=kosarica, prijavljen=prijavljen)
+    return template("nakupuj.html", produkti_nova=rows, kosarica=kosarica, prijavljen=prijavljen)
 
 @post("/dodaj_v_kosarico")
 def dodaj_v_kosarico():
@@ -597,9 +596,9 @@ def dodaj_v_kosarico():
     kosarica[ime_produkt] = (prodajna_cena, kolicina)
     kosarica_str = json.dumps(kosarica)
     response.set_cookie("kosarica", value=kosarica_str)
-    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
+    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti_nova")
     rows = cur.fetchall()
-    return template("nakupuj.html", produkti=rows, kosarica=kosarica, prijavljen=True)
+    return template("nakupuj.html", produkti_nova=rows, kosarica=kosarica, prijavljen=True)
 
 @post("/odstrani_iz_kosarice")
 def odstrani_iz_kosarice():
@@ -614,9 +613,9 @@ def odstrani_iz_kosarice():
     kosarica_str = json.dumps(kosarica)
     print(kosarica_str)
     response.set_cookie("kosarica", value=kosarica_str)
-    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti")
+    cur.execute("SELECT prodajna_cena, ime_produkt FROM produkti_nova")
     rows = cur.fetchall()
-    return template("nakupuj.html", produkti=rows, kosarica=kosarica, prijavljen=True)
+    return template("nakupuj.html", produkti_nova=rows, kosarica=kosarica, prijavljen=True)
 
 @get("/zakljuci_nakup")
 def zakljuci_nakup():
